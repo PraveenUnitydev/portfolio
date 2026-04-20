@@ -1,0 +1,1019 @@
+/* ════════════════════════════════════════════════════════
+   PRAVEEN KRISHNA — XR PORTFOLIO
+   style.css
+   
+   TABLE OF CONTENTS
+   1.  CSS Variables (Theme Tokens)
+   2.  Reset & Base
+   3.  Custom Cursor
+   4.  Overlays (Scanlines, HUD Corners)
+   5.  Navigation
+   6.  Hero Section
+   7.  Stats Row
+   8.  Shared Section Styles
+   9.  3D Model Showcase
+   10. Skill Matrix
+   11. XP / Achievements
+   12. Projects Grid
+   13. Experience Timeline
+   14. Contact
+   15. Footer
+   16. Animations & Keyframes
+   17. Glitch Effect
+   18. Responsive / Mobile
+════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────
+   1. CSS VARIABLES (edit theme here)
+───────────────────────────────────────── */
+:root {
+  --cyan:    #00f5ff;
+  --magenta: #ff00aa;
+  --green:   #39ff14;
+  --gold:    #ffd700;
+  --orange:  #ff6b00;
+  --dark:    #020408;
+  --panel:   rgba(0, 245, 255, 0.03);
+  --border:  rgba(0, 245, 255, 0.12);
+}
+
+
+/* ─────────────────────────────────────────
+   2. RESET & BASE
+───────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--dark);
+  color: #c8e6f0;
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+
+/* ─────────────────────────────────────────
+   3. CUSTOM CURSOR
+───────────────────────────────────────── */
+#cur {
+  position: fixed;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width .15s, height .15s, background .15s;
+  mix-blend-mode: screen;
+}
+
+#cur-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background: var(--cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+}
+
+/* Expanded cursor state on hover over interactive elements */
+#cur.big {
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 245, 255, 0.06);
+}
+
+
+/* ─────────────────────────────────────────
+   4. OVERLAYS — Scanlines, BG Canvas, HUD, Props Canvas
+───────────────────────────────────────── */
+#bgc {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* Props canvas — z=2 sits above particles, below page content */
+#props-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+#scanlines {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 50;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.025) 2px,
+    rgba(0, 0, 0, 0.025) 4px
+  );
+}
+
+/* HUD corner brackets */
+.hud {
+  position: fixed;
+  z-index: 20;
+  pointer-events: none;
+}
+.hud svg { display: block; }
+.htl { top: 72px;  left: 16px; }
+.htr { top: 72px;  right: 16px; transform: scaleX(-1); }
+.hbl { bottom: 16px; left: 16px; transform: scaleY(-1); }
+.hbr { bottom: 16px; right: 16px; transform: scale(-1, -1); }
+
+
+/* ─────────────────────────────────────────
+   5. NAVIGATION
+───────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 48px;
+  background: linear-gradient(180deg, rgba(2,4,8,0.97) 0%, transparent 100%);
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  color: var(--cyan);
+  letter-spacing: .25em;
+  text-shadow: 0 0 20px var(--cyan);
+}
+.logo em {
+  color: var(--magenta);
+  font-style: normal;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+}
+nav ul a {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  color: rgba(200, 230, 240, 0.5);
+  text-decoration: none;
+  letter-spacing: .15em;
+  transition: color .2s, text-shadow .2s;
+}
+nav ul a:hover {
+  color: var(--cyan);
+  text-shadow: 0 0 10px var(--cyan);
+}
+
+.nav-badge {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: var(--green);
+  letter-spacing: .1em;
+}
+.nav-badge::before { content: '● '; }
+
+
+/* ─────────────────────────────────────────
+   6. HERO SECTION
+───────────────────────────────────────── */
+#hero {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  position: relative;
+  z-index: 10;
+}
+
+.hero-tag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .72rem;
+  color: var(--magenta);
+  letter-spacing: .3em;
+  margin-bottom: 20px;
+  animation: fadeUp .8s ease both;
+}
+
+.hero-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(2.8rem, 8vw, 7.5rem);
+  line-height: .95;
+  color: #fff;
+  text-shadow: 0 0 60px rgba(0,245,255,.35), 0 0 120px rgba(0,245,255,.12);
+  animation: fadeUp .9s .1s ease both;
+}
+.hero-name .c1 { color: var(--cyan); }
+.hero-name .c2 { color: var(--magenta); }
+
+.hero-role {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(.8rem, 2vw, 1rem);
+  color: rgba(200, 230, 240, 0.45);
+  margin-top: 18px;
+  letter-spacing: .14em;
+  max-width: 620px;
+  animation: fadeUp 1s .2s ease both;
+}
+
+.hero-loc {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .7rem;
+  color: rgba(200, 230, 240, 0.25);
+  letter-spacing: .15em;
+  margin-top: 10px;
+  animation: fadeUp 1s .28s ease both;
+}
+
+/* Inline tech tags below location */
+.inline-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 16px;
+  animation: fadeUp 1s .32s ease both;
+}
+.itag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .6rem;
+  color: rgba(0, 245, 255, 0.5);
+  border: 1px solid rgba(0, 245, 255, 0.15);
+  padding: 3px 10px;
+  letter-spacing: .08em;
+  background: rgba(0, 245, 255, 0.03);
+}
+
+.hero-cta {
+  margin-top: 44px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp 1s .38s ease both;
+}
+
+/* Buttons */
+.btn {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-decoration: none;
+  padding: 13px 30px;
+  border: 1.5px solid;
+  transition: all .3s;
+  position: relative;
+  overflow: hidden;
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-101%);
+  transition: transform .3s;
+}
+.btn:hover::before { transform: translateX(0); }
+.btn span { position: relative; z-index: 1; }
+
+/* Cyan button */
+.bp { border-color: var(--cyan);    color: var(--cyan);    box-shadow: 0 0 18px rgba(0,245,255,.18); }
+.bp::before { background: rgba(0,245,255,.08); }
+.bp:hover { box-shadow: 0 0 40px rgba(0,245,255,.4); color: #fff; }
+
+/* Magenta button */
+.bm { border-color: var(--magenta); color: var(--magenta); box-shadow: 0 0 18px rgba(255,0,170,.12); }
+.bm::before { background: rgba(255,0,170,.08); }
+.bm:hover { box-shadow: 0 0 36px rgba(255,0,170,.35); color: #fff; }
+
+/* Scroll indicator */
+.hero-scroll {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .6rem;
+  color: rgba(200, 230, 240, 0.25);
+  letter-spacing: .2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: fadeUp 1s .5s ease both;
+}
+.sline {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(180deg, rgba(0,245,255,.5), transparent);
+  animation: spulse 2s infinite;
+}
+
+
+/* ─────────────────────────────────────────
+   7. STATS ROW
+───────────────────────────────────────── */
+#statrow {
+  position: relative;
+  z-index: 10;
+  padding: 40px 0;
+  border-top:    1px solid rgba(0, 245, 255, 0.06);
+  border-bottom: 1px solid rgba(0, 245, 255, 0.06);
+}
+
+.stat-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+}
+
+.stat-box {
+  text-align: center;
+  padding: 24px 16px;
+  border-right: 1px solid rgba(0, 245, 255, 0.07);
+}
+.stat-box:last-child { border-right: none; }
+
+.stat-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0,245,255,.4);
+  display: block;
+}
+
+.stat-lbl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: rgba(200, 230, 240, 0.3);
+  letter-spacing: .15em;
+  margin-top: 4px;
+}
+
+
+/* ─────────────────────────────────────────
+   8. SHARED SECTION STYLES
+───────────────────────────────────────── */
+section {
+  position: relative;
+  z-index: 10;
+  /* Narrow content column — props float in the side gutters */
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sec-head {
+  text-align: center;
+  margin-bottom: 64px;
+  padding: 0 24px;
+}
+
+.eyebrow {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .68rem;
+  color: var(--magenta);
+  letter-spacing: .35em;
+  margin-bottom: 12px;
+}
+
+.sec-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  color: #fff;
+  line-height: 1.05;
+}
+.sec-title .glow {
+  color: var(--cyan);
+  text-shadow: 0 0 28px rgba(0,245,255,.5);
+}
+
+
+/* ─────────────────────────────────────────
+   9. SKILL MATRIX
+───────────────────────────────────────── */
+#skills { padding: 80px 0; }
+
+.skills-wrap {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px 72px;
+}
+
+.sk-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+.sk-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .75rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .1em;
+}
+.sk-pct {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .75rem;
+  color: var(--cyan);
+}
+.sk-bar {
+  height: 2px;
+  background: rgba(255,255,255,.05);
+}
+.sk-fill {
+  height: 100%;
+  width: 0;
+  transition: width 1.6s cubic-bezier(.25,.46,.45,.94);
+  background: linear-gradient(90deg, var(--magenta), var(--cyan));
+  box-shadow: 0 0 8px var(--cyan);
+}
+
+
+/* ─────────────────────────────────────────
+   11. XP / ACHIEVEMENTS
+───────────────────────────────────────── */
+#xpsec { padding: 80px 0; }
+
+.xp-header-wrap {
+  padding: 0 24px;
+}
+
+.xp-wrap {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.xp-left {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 36px;
+  position: relative;
+}
+.xp-left::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+.lvl-badge {
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: .6rem;
+  font-weight: 900;
+  color: var(--dark);
+  background: var(--cyan);
+  padding: 4px 12px;
+  letter-spacing: .15em;
+  margin-bottom: 14px;
+}
+.xp-big {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.xp-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .7rem;
+  color: rgba(200,230,240,.35);
+  letter-spacing: .15em;
+  margin-bottom: 22px;
+}
+.xpbar-lbl {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+.xpbar-lbl span {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: rgba(200,230,240,.35);
+  letter-spacing: .1em;
+}
+.xpbar { height: 5px; background: rgba(255,255,255,.05); }
+.xpbar-fill {
+  height: 100%;
+  width: 78%;
+  background: linear-gradient(90deg, var(--magenta), var(--gold), var(--cyan));
+  box-shadow: 0 0 14px rgba(0,245,255,.45);
+  animation: xglow 2s ease-in-out infinite alternate;
+}
+
+.xp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 22px;
+}
+.xp-s {
+  text-align: center;
+  padding: 14px;
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.04);
+}
+.xp-sv {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--cyan);
+  display: block;
+}
+.xp-sl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem;
+  color: rgba(200,230,240,.3);
+  letter-spacing: .1em;
+}
+
+/* Achievements grid */
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.ach {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .3s, box-shadow .3s;
+}
+.ach:hover {
+  border-color: var(--gold);
+  box-shadow: 0 0 26px rgba(255,215,0,.08);
+}
+.ach-ico { font-size: 1.8rem; margin-bottom: 7px; display: block; }
+.ach-n {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .08em;
+  margin-bottom: 3px;
+}
+.ach-d {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .57rem;
+  color: rgba(200,230,240,.3);
+  line-height: 1.4;
+}
+.ach.unlocked::after {
+  content: '✓';
+  position: absolute;
+  top: 8px; right: 10px;
+  font-size: .6rem;
+  color: var(--green);
+}
+.ach.locked { opacity: .28; filter: grayscale(1); }
+
+
+/* ─────────────────────────────────────────
+   12. PROJECTS GRID
+───────────────────────────────────────── */
+#projects { padding: 110px 0; }
+
+.proj-grid {
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.pcard {
+  position: relative;
+  overflow: hidden;
+  background: var(--panel);
+  border: 1px solid rgba(255,255,255,.04);
+  transition: all .4s;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 28px;
+}
+.pcard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(2,4,8,.95) 30%, transparent 100%);
+  z-index: 1;
+}
+.pcard:hover {
+  border-color: rgba(0,245,255,.2);
+  box-shadow: 0 0 0 1px rgba(0,245,255,.08);
+}
+
+.pbg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(.25) brightness(.35);
+  transition: filter .4s, transform .4s;
+}
+.pcard:hover .pbg {
+  filter: saturate(.6) brightness(.45);
+  transform: scale(1.04);
+}
+
+.pc { position: relative; z-index: 2; }
+
+.ptags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 10px; }
+.ptag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .57rem;
+  color: var(--cyan);
+  border: 1px solid rgba(0,245,255,.22);
+  padding: 2px 9px;
+  letter-spacing: .08em;
+  background: rgba(0,245,255,.04);
+}
+.ptag.xr { color: var(--magenta); border-color: rgba(255,0,170,.22); background: rgba(255,0,170,.04); }
+.ptag.ai { color: var(--gold);    border-color: rgba(255,215,0,.22); background: rgba(255,215,0,.03); }
+
+.ptitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 7px;
+}
+.pdesc {
+  font-size: .8rem;
+  color: rgba(200,230,240,.45);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.pnum {
+  position: absolute;
+  top: 20px; right: 20px;
+  z-index: 2;
+  font-family: 'Orbitron', monospace;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: rgba(255,255,255,.028);
+  line-height: 1;
+}
+
+.plink {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: var(--cyan);
+  text-decoration: none;
+  letter-spacing: .1em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: gap .2s;
+}
+.plink:hover { gap: 13px; }
+.plink::after { content: '→'; }
+
+
+/* ─────────────────────────────────────────
+   13. EXPERIENCE TIMELINE
+───────────────────────────────────────── */
+#exp { padding: 110px 0; }
+
+.tl {
+  padding: 0 24px;
+  position: relative;
+}
+.tl::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--cyan), var(--magenta), transparent);
+  opacity: .25;
+}
+
+.tli {
+  padding: 0 0 52px 40px;
+  position: relative;
+}
+.tli::before {
+  content: '';
+  position: absolute;
+  left: -4px; top: 4px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 14px var(--cyan);
+}
+
+.tl-date {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: var(--magenta);
+  letter-spacing: .15em;
+  margin-bottom: 6px;
+}
+.tl-role {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.tl-co {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .75rem;
+  color: var(--cyan);
+  margin-bottom: 12px;
+  letter-spacing: .08em;
+}
+.tl-desc {
+  font-size: .88rem;
+  color: rgba(200,230,240,.45);
+  line-height: 1.7;
+}
+.tl-desc ul { list-style: none; padding: 0; }
+.tl-desc ul li { padding-left: 14px; position: relative; margin-bottom: 6px; }
+.tl-desc ul li::before { content: '›'; position: absolute; left: 0; color: var(--cyan); }
+
+
+/* ─────────────────────────────────────────
+   14. CONTACT
+───────────────────────────────────────── */
+#contact {
+  padding: 110px 24px;
+  text-align: center;
+}
+
+.contact-box { max-width: 680px; margin: 0 auto; }
+
+.contact-email {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1rem, 3.5vw, 2rem);
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: 0 0 36px rgba(0,245,255,.4);
+  text-decoration: none;
+  display: block;
+  margin: 36px 0;
+  transition: text-shadow .3s;
+}
+.contact-email:hover {
+  text-shadow: 0 0 60px rgba(0,245,255,.7), 0 0 100px rgba(0,245,255,.3);
+}
+
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.sbtn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .65rem;
+  color: rgba(200,230,240,.45);
+  text-decoration: none;
+  letter-spacing: .12em;
+  padding: 9px 18px;
+  border: 1px solid rgba(200,230,240,.1);
+  transition: all .3s;
+}
+.sbtn:hover {
+  color: var(--cyan);
+  border-color: rgba(0,245,255,.3);
+  box-shadow: 0 0 18px rgba(0,245,255,.08);
+}
+
+
+/* ─────────────────────────────────────────
+   15. FOOTER
+───────────────────────────────────────── */
+footer {
+  border-top: 1px solid rgba(255,255,255,.04);
+  padding: 28px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .6rem;
+  color: rgba(200,230,240,.18);
+  letter-spacing: .1em;
+  position: relative;
+  z-index: 10;
+}
+
+
+/* ─────────────────────────────────────────
+   16. ANIMATIONS & KEYFRAMES
+───────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spulse {
+  0%, 100% { opacity: .3; }
+  50%       { opacity: .8; }
+}
+
+@keyframes xglow {
+  from { box-shadow: 0 0 8px rgba(0,245,255,.3); }
+  to   { box-shadow: 0 0 22px rgba(0,245,255,.8), 0 0 44px rgba(0,245,255,.25); }
+}
+
+/* Scroll-reveal: elements start hidden, JS adds .visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.10s; }
+.reveal-delay-2 { transition-delay: 0.20s; }
+.reveal-delay-3 { transition-delay: 0.30s; }
+.reveal-delay-4 { transition-delay: 0.40s; }
+.reveal-delay-5 { transition-delay: 0.50s; }
+.reveal-delay-6 { transition-delay: 0.60s; }
+
+
+/* ─────────────────────────────────────────
+   17. GLITCH TEXT EFFECT
+───────────────────────────────────────── */
+.glitch { position: relative; }
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.glitch::before {
+  color: var(--cyan);
+  clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+  animation: glA 5s infinite linear;
+  opacity: .6;
+}
+.glitch::after {
+  color: var(--magenta);
+  clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+  animation: glB 5s infinite linear;
+  opacity: .6;
+}
+@keyframes glA {
+  0%,90%,100% { transform: none; opacity: 0; }
+  92% { transform: translateX(-4px); opacity: .6; }
+  94% { transform: translateX(4px);  opacity: .6; }
+  96% { transform: none; opacity: 0; }
+}
+@keyframes glB {
+  0%,93%,100% { transform: none; opacity: 0; }
+  95% { transform: translateX(4px);  opacity: .6; }
+  97% { transform: translateX(-4px); opacity: .6; }
+  99% { transform: none; opacity: 0; }
+}
+
+
+/* ─────────────────────────────────────────
+   18. MOBILE HAMBURGER MENU
+───────────────────────────────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: none;
+  padding: 4px;
+  z-index: 200;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 1.5px;
+  background: var(--cyan);
+  transition: transform .3s, opacity .3s;
+  box-shadow: 0 0 6px var(--cyan);
+}
+.hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile nav drawer */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 4, 8, 0.97);
+  z-index: 150;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  backdrop-filter: blur(12px);
+}
+.mobile-nav.open { display: flex; }
+.mobile-nav a {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: rgba(200,230,240,.5);
+  text-decoration: none;
+  letter-spacing: .2em;
+  transition: color .2s, text-shadow .2s;
+}
+.mobile-nav a:hover {
+  color: var(--cyan);
+  text-shadow: 0 0 20px var(--cyan);
+}
+.mobile-nav-close {
+  position: absolute;
+  top: 20px; right: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .7rem;
+  color: rgba(200,230,240,.3);
+  letter-spacing: .15em;
+  cursor: none;
+}
+
+
+/* ─────────────────────────────────────────
+   19. RESPONSIVE / MOBILE
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  nav ul { display: none; }
+  .hamburger { display: flex; }
+
+  section { max-width: 100%; }
+
+  .proj-grid { grid-template-columns: 1fr; padding: 0 16px; }
+  .skills-wrap { grid-template-columns: 1fr; padding: 0 16px; }
+  .xp-wrap { grid-template-columns: 1fr; padding: 0 16px; }
+  .ach-grid { grid-template-columns: 1fr 1fr; }
+  .stat-inner { grid-template-columns: 1fr 1fr; }
+
+  .sec-head { padding: 0 16px; }
+  .tl { padding: 0 16px; }
+
+  footer {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ach-grid { grid-template-columns: 1fr; }
+  .stat-inner { grid-template-columns: 1fr 1fr; }
+  .hero-name { font-size: clamp(2.4rem, 15vw, 4rem); }
+}
