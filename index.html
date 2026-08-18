@@ -4,188 +4,346 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Praveen Krishna — XR Developer</title>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════
-       CURSOR (custom animated cursor)
-  ══════════════════════════════════════ -->
   <div id="cur"></div>
   <div id="cur-dot"></div>
-
-  <!-- Scan-line overlay -->
   <div id="scanlines"></div>
-
-  <!-- Three.js background canvas -->
   <canvas id="bgc"></canvas>
 
-  <!-- HUD corner brackets -->
   <div class="hud htl"><svg width="60" height="60" viewBox="0 0 60 60" fill="none"><path d="M0 60 L0 0 L60 0" stroke="rgba(0,245,255,0.18)" stroke-width="1"/><path d="M0 40 L0 0 L40 0" stroke="rgba(0,245,255,0.08)" stroke-width="1"/></svg></div>
   <div class="hud htr"><svg width="60" height="60" viewBox="0 0 60 60" fill="none"><path d="M0 60 L0 0 L60 0" stroke="rgba(0,245,255,0.18)" stroke-width="1"/><path d="M0 40 L0 0 L40 0" stroke="rgba(0,245,255,0.08)" stroke-width="1"/></svg></div>
   <div class="hud hbl"><svg width="60" height="60" viewBox="0 0 60 60" fill="none"><path d="M0 60 L0 0 L60 0" stroke="rgba(0,245,255,0.18)" stroke-width="1"/></svg></div>
   <div class="hud hbr"><svg width="60" height="60" viewBox="0 0 60 60" fill="none"><path d="M0 60 L0 0 L60 0" stroke="rgba(0,245,255,0.18)" stroke-width="1"/></svg></div>
 
-
-  <!-- ══════════════════════════════════════
-       NAVIGATION
-  ══════════════════════════════════════ -->
+  <!-- NAV -->
   <nav>
     <div class="logo">PK<em>.</em>XR</div>
     <ul>
+      <li><a href="#projects">// WORK</a></li>
+      <li><a href="#workflow">// PROCESS</a></li>
       <li><a href="#skills">// SKILLS</a></li>
-      <li><a href="#projects">// PROJECTS</a></li>
-      <li><a href="#exp">// EXPERIENCE</a></li>
+      <li><a href="#exp">// EXP</a></li>
       <li><a href="#contact">// CONTACT</a></li>
     </ul>
     <div class="nav-badge">AVAILABLE</div>
-    <!-- Mobile hamburger -->
     <button class="hamburger" id="hamburger" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
   </nav>
 
-  <!-- Mobile nav drawer -->
   <div class="mobile-nav" id="mobile-nav">
     <div class="mobile-nav-close">[ ESC TO CLOSE ]</div>
-    <a href="#skills"   onclick="closeMobileNav()">// SKILLS</a>
-    <a href="#projects" onclick="closeMobileNav()">// PROJECTS</a>
-    <a href="#exp"      onclick="closeMobileNav()">// EXPERIENCE</a>
-    <a href="#contact"  onclick="closeMobileNav()">// CONTACT</a>
+    <a href="#projects"  onclick="closeMobileNav()">// WORK</a>
+    <a href="#workflow"  onclick="closeMobileNav()">// PROCESS</a>
+    <a href="#skills"    onclick="closeMobileNav()">// SKILLS</a>
+    <a href="#exp"       onclick="closeMobileNav()">// EXP</a>
+    <a href="#contact"   onclick="closeMobileNav()">// CONTACT</a>
   </div>
 
-
-  <!-- ══════════════════════════════════════
-       HERO
-  ══════════════════════════════════════ -->
+  <!-- HERO -->
   <section id="hero">
-    <p class="hero-tag">[ UNITY · XR · AR/VR · 3D DEVELOPER ]</p>
-
+    <p class="hero-tag">[ UNITY · AR/VR · DIGITAL TWIN · AI ]</p>
     <h1 class="hero-name glitch" data-text="PRAVEEN KRISHNA">
       <span class="c1">PRAVEEN</span><br><span class="c2">KRISHNA</span>
     </h1>
-
-    <p class="hero-role">
-      // 5+ years crafting immersive XR experiences &amp; AI-driven 3D systems<br>
-      for enterprise, government, and the metaverse
-    </p>
-    <p class="hero-loc">▸ CHENNAI, INDIA — praveenkrishna.dev</p>
-
+    <p class="hero-role">Senior XR Engineer · Mahindra &amp; Mahindra<br>
+    <span class="hero-role-sub">Building immersive realities for enterprise, government &amp; automotive</span></p>
     <div class="inline-tags">
       <span class="itag">AR FOUNDATION</span>
       <span class="itag">META QUEST</span>
       <span class="itag">OPENXR</span>
       <span class="itag">UNITY</span>
-      <span class="itag">WEBXR</span>
       <span class="itag">DIGITAL TWIN</span>
+      <span class="itag">GENAI</span>
     </div>
-
     <div class="hero-cta">
-      <a href="#projects" class="btn bp"><span>VIEW PROJECTS</span></a>
+      <a href="#projects" class="btn bp"><span>VIEW WORK</span></a>
       <a href="mailto:praveenunitydev@gmail.com" class="btn bm"><span>HIRE ME</span></a>
     </div>
+    <div class="hero-scroll"><span>SCROLL</span><div class="sline"></div></div>
+  </section>
 
-    <div class="hero-scroll">
-      <span>SCROLL TO EXPLORE</span>
-      <div class="sline"></div>
+  <!-- STATS ROW -->
+  <div id="statrow">
+    <div class="stat-inner">
+      <div class="stat-box reveal reveal-delay-1"><span class="stat-val">5+</span><span class="stat-lbl">YEARS XR</span></div>
+      <div class="stat-box reveal reveal-delay-2"><span class="stat-val">30+</span><span class="stat-lbl">APPS SHIPPED</span></div>
+      <div class="stat-box reveal reveal-delay-3"><span class="stat-val">10K+</span><span class="stat-lbl">STUDENTS REACHED</span></div>
+      <div class="stat-box reveal reveal-delay-4"><span class="stat-val">95%</span><span class="stat-lbl">CLIENT SATISFACTION</span></div>
     </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PROJECTS — Screenshot-based grid
+       HOW TO ADD YOUR SCREENSHOTS:
+       1. Put images in images/ folder
+       2. Replace the style="--img:url(...)" on each .pcard
+          e.g. style="--img:url('images/daimler.jpg')"
+  ══════════════════════════════════════ -->
+  <section id="projects">
+    <div class="sec-head reveal">
+      <p class="eyebrow">[ SELECTED · ENTERPRISE · WORK ]</p>
+      <h2 class="sec-title">PROJECT<br><span class="glow">LOG</span></h2>
+    </div>
+
+    <!-- FEATURED ROW — large cards -->
+    <div class="proj-featured reveal">
+
+      <div class="pcard pcard--large" style="--img:url('images/projects/daimler.jpg')">
+        <div class="pcard-img"></div>
+        <div class="pcard-body">
+          <div class="ptags">
+            <span class="ptag xr">AR</span><span class="ptag">UNITY</span><span class="ptag ai">ANALYTICS</span>
+          </div>
+          <div class="ptitle">DaimlerXRtreme</div>
+          <div class="pdesc">AR sales tool for Daimler India Commercial Vehicles — real-time 3D model interactions contributed to a <strong>30% faster sales cycle</strong>.</div>
+          <div class="pmeta">
+            <span class="pmeta-item">CLIENT: Daimler India</span>
+            <span class="pmeta-item">PLATFORM: Android / iOS</span>
+          </div>
+          <a href="#" class="plink">VIEW CASE <span>→</span></a>
+        </div>
+        <div class="pnum">01</div>
+      </div>
+
+      <div class="pcard pcard--large" style="--img:url('images/projects/ongc.jpg')">
+        <div class="pcard-img"></div>
+        <div class="pcard-body">
+          <div class="ptags">
+            <span class="ptag xr">VR</span><span class="ptag">SIMULATION</span><span class="ptag">SAFETY</span>
+          </div>
+          <div class="ptitle">VR Firefighter Training</div>
+          <div class="pdesc">Life-critical VR training for ONGC — real-world hazard simulation, emergency protocols. <strong>60% better trainee retention</strong> vs classroom.</div>
+          <div class="pmeta">
+            <span class="pmeta-item">CLIENT: ONGC</span>
+            <span class="pmeta-item">PLATFORM: PC VR / Quest</span>
+          </div>
+          <a href="#" class="plink">VIEW CASE <span>→</span></a>
+        </div>
+        <div class="pnum">02</div>
+      </div>
+
+    </div>
+
+    <!-- SECONDARY GRID — 3 cards -->
+    <div class="proj-grid reveal">
+
+      <div class="pcard" style="--img:url('images/projects/mercedes.jpg')">
+        <div class="pcard-img"></div>
+        <div class="pcard-body">
+          <div class="ptags">
+            <span class="ptag">DIGITAL TWIN</span><span class="ptag xr">XR</span>
+          </div>
+          <div class="ptitle">Factory Layout Visualizer</div>
+          <div class="pdesc">Mercedes-Benz factory planning — robotic path planning, <strong>10× accuracy</strong>, 60% effort reduction.</div>
+          <div class="pmeta"><span class="pmeta-item">CLIENT: Mercedes-Benz</span></div>
+          <a href="#" class="plink">VIEW CASE <span>→</span></a>
+        </div>
+        <div class="pnum">03</div>
+      </div>
+
+      <div class="pcard" style="--img:url('images/projects/metakalvi.jpg')">
+        <div class="pcard-img"></div>
+        <div class="pcard-body">
+          <div class="ptags">
+            <span class="ptag xr">VR</span><span class="ptag ai">EDU</span><span class="ptag">GOVT</span>
+          </div>
+          <div class="ptitle">MetaKalvi Platform</div>
+          <div class="pdesc">Tamil Nadu Govt funded VR education — interactive STEM for <strong>10,000+ students</strong> across public schools.</div>
+          <div class="pmeta"><span class="pmeta-item">CLIENT: TN Government</span></div>
+          <a href="#" class="plink">VIEW CASE <span>→</span></a>
+        </div>
+        <div class="pnum">04</div>
+      </div>
+
+      <div class="pcard" style="--img:url('images/projects/digitsnap.jpg')">
+        <div class="pcard-img"></div>
+        <div class="pcard-body">
+          <div class="ptags">
+            <span class="ptag ai">AI</span><span class="ptag">SYNTHETIC DATA</span>
+          </div>
+          <div class="ptitle">Digit Snap</div>
+          <div class="pdesc">4–6 real images → 5,000+ AI-ready variants. <strong>80% faster</strong> ML training pipelines.</div>
+          <div class="pmeta"><span class="pmeta-item">CLIENT: DIGIT7</span></div>
+          <a href="#" class="plink">VIEW CASE <span>→</span></a>
+        </div>
+        <div class="pnum">05</div>
+      </div>
+
+    </div>
+
+    <!-- SCREENSHOT HINT — shown only when no image set -->
+    <p class="proj-hint reveal">
+      ↑ Replace placeholder images — add screenshots to <code>images/projects/</code> and set <code>--img:url('images/projects/filename.jpg')</code> on each card
+    </p>
+
   </section>
 
 
   <!-- ══════════════════════════════════════
-       STATS ROW
+       ENGINEERING WORKFLOW SECTION
   ══════════════════════════════════════ -->
-  <div id="statrow">
-    <div class="stat-inner">
-      <div class="stat-box reveal reveal-delay-1">
-        <span class="stat-val">5+</span>
-        <span class="stat-lbl">YEARS XR</span>
-      </div>
-      <div class="stat-box reveal reveal-delay-2">
-        <span class="stat-val">30+</span>
-        <span class="stat-lbl">XR APPS SHIPPED</span>
-      </div>
-      <div class="stat-box reveal reveal-delay-3">
-        <span class="stat-val">10K+</span>
-        <span class="stat-lbl">STUDENTS REACHED</span>
-      </div>
-      <div class="stat-box reveal reveal-delay-4">
-        <span class="stat-val">95%</span>
-        <span class="stat-lbl">CLIENT SATISFACTION</span>
-      </div>
+  <section id="workflow">
+    <div class="sec-head reveal">
+      <p class="eyebrow">[ HOW I BUILD ]</p>
+      <h2 class="sec-title">ENGINEERING<br><span class="glow">APPROACH</span></h2>
     </div>
-  </div>
+
+    <div class="workflow-wrap">
+
+      <!-- Pipeline flow -->
+      <div class="wf-pipeline reveal">
+        <div class="wf-step">
+          <div class="wf-step-icon">
+            <svg viewBox="0 0 40 40" fill="none"><rect x="4" y="4" width="32" height="32" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M12 20h16M20 12v16" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <div class="wf-step-label">DISCOVERY</div>
+          <div class="wf-step-sub">Requirements &amp; XR scoping</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">
+            <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="1.5"/><path d="M20 8v4M20 28v4M8 20h4M28 20h4" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <div class="wf-step-label">PROTOTYPE</div>
+          <div class="wf-step-sub">Unity / WebXR POC</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">
+            <svg viewBox="0 0 40 40" fill="none"><path d="M8 32L20 8l12 24H8z" stroke="currentColor" stroke-width="1.5"/><path d="M13 24h14" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <div class="wf-step-label">BUILD</div>
+          <div class="wf-step-sub">Optimised XR pipeline</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">
+            <svg viewBox="0 0 40 40" fill="none"><rect x="6" y="10" width="28" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M14 20l4 4 8-8" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <div class="wf-step-label">TEST &amp; ITERATE</div>
+          <div class="wf-step-sub">Device QA &amp; UX review</div>
+        </div>
+        <div class="wf-arrow">→</div>
+        <div class="wf-step">
+          <div class="wf-step-icon">
+            <svg viewBox="0 0 40 40" fill="none"><path d="M20 6l2.5 7.5H30l-6.5 4.5 2.5 7.5L20 21l-6 4.5 2.5-7.5L11 13.5h7.5z" stroke="currentColor" stroke-width="1.5"/></svg>
+          </div>
+          <div class="wf-step-label">SHIP</div>
+          <div class="wf-step-sub">Deploy + handoff</div>
+        </div>
+      </div>
+
+      <!-- Sample workflow card -->
+      <div class="wf-case reveal reveal-delay-2">
+        <div class="wf-case-tag">SAMPLE WORKFLOW — DAIMLERXRTREME</div>
+        <div class="wf-case-steps">
+          <div class="wf-case-step">
+            <span class="wf-cs-num">01</span>
+            <div>
+              <div class="wf-cs-title">CAD / 3D ASSETS</div>
+              <div class="wf-cs-sub">Receive vehicle models in STEP / OBJ format</div>
+            </div>
+          </div>
+          <div class="wf-case-arrow">↓</div>
+          <div class="wf-case-step">
+            <span class="wf-cs-num">02</span>
+            <div>
+              <div class="wf-cs-title">OPTIMISE + IMPORT</div>
+              <div class="wf-cs-sub">Reduce poly count, PBR materials, Unity import</div>
+            </div>
+          </div>
+          <div class="wf-case-arrow">↓</div>
+          <div class="wf-case-step">
+            <span class="wf-cs-num">03</span>
+            <div>
+              <div class="wf-cs-title">AR LAYER</div>
+              <div class="wf-cs-sub">ARFoundation + real-time touch interactions</div>
+            </div>
+          </div>
+          <div class="wf-case-arrow">↓</div>
+          <div class="wf-case-step">
+            <span class="wf-cs-num">04</span>
+            <div>
+              <div class="wf-cs-title">ANALYTICS + DEPLOY</div>
+              <div class="wf-cs-sub">Session data, build for Android + iOS, OTA update</div>
+            </div>
+          </div>
+        </div>
+        <div class="wf-case-result">
+          <span class="wf-result-val">30%</span>
+          <span class="wf-result-lbl">faster sales cycle</span>
+          <span class="wf-result-val">100%</span>
+          <span class="wf-result-lbl">on-time delivery</span>
+        </div>
+      </div>
+
+      <!-- Tech stack pills -->
+      <div class="wf-stack reveal reveal-delay-3">
+        <div class="wf-stack-col">
+          <div class="wf-stack-label">XR DEVELOPMENT</div>
+          <div class="wf-pills">
+            <span class="wpill">Unity</span><span class="wpill">AR Foundation</span>
+            <span class="wpill">ARKit</span><span class="wpill">ARCore</span>
+            <span class="wpill">OpenXR</span><span class="wpill">MRTK</span>
+            <span class="wpill">Vuforia</span><span class="wpill">Meta Quest SDK</span>
+          </div>
+        </div>
+        <div class="wf-stack-col">
+          <div class="wf-stack-label">PROGRAMMING</div>
+          <div class="wf-pills">
+            <span class="wpill">C#</span><span class="wpill">C++</span>
+            <span class="wpill">JavaScript</span><span class="wpill">Python</span>
+            <span class="wpill">GLSL</span>
+          </div>
+        </div>
+        <div class="wf-stack-col">
+          <div class="wf-stack-label">AI / TOOLS</div>
+          <div class="wf-pills">
+            <span class="wpill">OpenCV</span><span class="wpill">TensorFlow</span>
+            <span class="wpill">GenAI</span><span class="wpill">Three.js</span>
+            <span class="wpill">AWS</span><span class="wpill">Git</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
 
-  <!-- ══════════════════════════════════════
-       SKILL MATRIX
-       ─────────────────────────────────────
-       To edit skills: change data-pct and
-       the displayed % in .sk-pct
-  ══════════════════════════════════════ -->
+  <!-- SKILL MATRIX -->
   <section id="skills">
     <div class="sec-head reveal">
       <p class="eyebrow">[ TECH · STACK · LOADOUT ]</p>
       <h2 class="sec-title">SKILL<br><span class="glow">MATRIX</span></h2>
     </div>
-
     <div class="skills-wrap">
-      <div class="sk-item reveal reveal-delay-1" data-pct="96">
-        <div class="sk-top"><span class="sk-name">UNITY ENGINE</span><span class="sk-pct">96%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-2" data-pct="92">
-        <div class="sk-top"><span class="sk-name">AR/VR — ARKit · ARCore · OpenXR</span><span class="sk-pct">92%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-3" data-pct="90">
-        <div class="sk-top"><span class="sk-name">C# / C++ PROGRAMMING</span><span class="sk-pct">90%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-4" data-pct="88">
-        <div class="sk-top"><span class="sk-name">META QUEST / MRTK / VUFORIA</span><span class="sk-pct">88%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-5" data-pct="82">
-        <div class="sk-top"><span class="sk-name">DIGITAL TWIN / SIMULATION</span><span class="sk-pct">82%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-6" data-pct="80">
-        <div class="sk-top"><span class="sk-name">AI / GENAI INTEGRATION</span><span class="sk-pct">80%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-1" data-pct="78">
-        <div class="sk-top"><span class="sk-name">THREE.JS / WEBXR / WEBGL</span><span class="sk-pct">78%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
-      <div class="sk-item reveal reveal-delay-2" data-pct="85">
-        <div class="sk-top"><span class="sk-name">3D ANIMATION · RIGGING · UI/UX</span><span class="sk-pct">85%</span></div>
-        <div class="sk-bar"><div class="sk-fill"></div></div>
-      </div>
+      <div class="sk-item reveal reveal-delay-1" data-pct="96"><div class="sk-top"><span class="sk-name">UNITY ENGINE</span><span class="sk-pct">96%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-2" data-pct="92"><div class="sk-top"><span class="sk-name">AR/VR — ARKit · ARCore · OpenXR</span><span class="sk-pct">92%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-3" data-pct="90"><div class="sk-top"><span class="sk-name">C# / C++ PROGRAMMING</span><span class="sk-pct">90%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-4" data-pct="88"><div class="sk-top"><span class="sk-name">META QUEST / MRTK / VUFORIA</span><span class="sk-pct">88%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-5" data-pct="82"><div class="sk-top"><span class="sk-name">DIGITAL TWIN / SIMULATION</span><span class="sk-pct">82%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-6" data-pct="80"><div class="sk-top"><span class="sk-name">AI / GENAI INTEGRATION</span><span class="sk-pct">80%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-1" data-pct="78"><div class="sk-top"><span class="sk-name">THREE.JS / WEBXR / WEBGL</span><span class="sk-pct">78%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
+      <div class="sk-item reveal reveal-delay-2" data-pct="85"><div class="sk-top"><span class="sk-name">3D ANIMATION · RIGGING · UI/UX</span><span class="sk-pct">85%</span></div><div class="sk-bar"><div class="sk-fill"></div></div></div>
     </div>
   </section>
 
 
-  <!-- ══════════════════════════════════════
-       PLAYER STATS / XP / ACHIEVEMENTS
-  ══════════════════════════════════════ -->
+  <!-- XP / ACHIEVEMENTS -->
   <section id="xpsec">
     <div class="xp-header-wrap">
-      <div class="sec-head" style="text-align:left; margin-bottom:36px;">
+      <div class="sec-head" style="text-align:left;margin-bottom:36px;">
         <p class="eyebrow">[ PROGRESS · LEVEL · ACHIEVEMENTS ]</p>
         <h2 class="sec-title">PLAYER<br><span class="glow">STATS</span></h2>
       </div>
     </div>
-
     <div class="xp-wrap">
-
-      <!-- XP Card -->
       <div class="xp-left">
         <div class="lvl-badge">LVL 52</div>
         <div class="xp-big">XR<br>ARCHITECT</div>
@@ -201,238 +359,35 @@
           <div class="xp-s"><span class="xp-sv">5</span><span class="xp-sl">INDIE GAMES</span></div>
         </div>
       </div>
-
-      <!-- Achievements -->
       <div class="ach-grid">
-        <div class="ach unlocked">
-          <span class="ach-ico">🏭</span>
-          <div class="ach-n">ENTERPRISE HERO</div>
-          <div class="ach-d">15+ XR apps for automotive &amp; manufacturing</div>
-        </div>
-        <div class="ach unlocked">
-          <span class="ach-ico">🔥</span>
-          <div class="ach-n">SAFETY TRAINER</div>
-          <div class="ach-d">VR firefighter sim for ONGC — 60% better retention</div>
-        </div>
-        <div class="ach unlocked">
-          <span class="ach-ico">🏫</span>
-          <div class="ach-n">EDU PIONEER</div>
-          <div class="ach-d">MetaKalvi — 10,000+ students, TN Govt funded</div>
-        </div>
-        <div class="ach unlocked">
-          <span class="ach-ico">⚡</span>
-          <div class="ach-n">SPEED BUILDER</div>
-          <div class="ach-d">InstaXR: model setup 1 week → 10 seconds</div>
-        </div>
-        <div class="ach unlocked">
-          <span class="ach-ico">🤖</span>
-          <div class="ach-n">AI SYNTH</div>
-          <div class="ach-d">Digit Snap: 4 images → 5,000 AI training variants</div>
-        </div>
-        <div class="ach unlocked">
-          <span class="ach-ico">🎮</span>
-          <div class="ach-n">INDIE FOUNDER</div>
-          <div class="ach-d">ARTO Games — 5 titles, Flyfar 5K+ downloads</div>
-        </div>
+        <div class="ach unlocked"><span class="ach-ico">🏭</span><div class="ach-n">ENTERPRISE HERO</div><div class="ach-d">15+ XR apps for automotive &amp; manufacturing</div></div>
+        <div class="ach unlocked"><span class="ach-ico">🔥</span><div class="ach-n">SAFETY TRAINER</div><div class="ach-d">VR firefighter sim for ONGC — 60% better retention</div></div>
+        <div class="ach unlocked"><span class="ach-ico">🏫</span><div class="ach-n">EDU PIONEER</div><div class="ach-d">MetaKalvi — 10,000+ students, TN Govt funded</div></div>
+        <div class="ach unlocked"><span class="ach-ico">⚡</span><div class="ach-n">SPEED BUILDER</div><div class="ach-d">InstaXR: model setup 1 week → 10 seconds</div></div>
+        <div class="ach unlocked"><span class="ach-ico">🤖</span><div class="ach-n">AI SYNTH</div><div class="ach-d">Digit Snap: 4 images → 5,000 AI training variants</div></div>
+        <div class="ach unlocked"><span class="ach-ico">🎮</span><div class="ach-n">INDIE FOUNDER</div><div class="ach-d">ARTO Games — 5 titles, Flyfar 5K+ downloads</div></div>
       </div>
-
     </div>
   </section>
 
 
-  <!-- ══════════════════════════════════════
-       PROJECTS
-  ══════════════════════════════════════ -->
-  <section id="projects">
-    <div class="sec-head reveal">
-      <p class="eyebrow">[ SELECTED · ENTERPRISE · WORK ]</p>
-      <h2 class="sec-title">PROJECT<br><span class="glow">LOG</span></h2>
-    </div>
-
-    <div class="proj-grid">
-
-      <div class="pcard reveal reveal-delay-1">
-        <div class="pbg" style="background:linear-gradient(135deg,#080020,#001a14);"></div>
-        <div class="pnum">01</div>
-        <div class="pc">
-          <div class="ptags">
-            <span class="ptag xr">AR</span>
-            <span class="ptag">UNITY</span>
-            <span class="ptag ai">ANALYTICS</span>
-          </div>
-          <div class="ptitle">DaimlerXRtreme</div>
-          <div class="pdesc">AR sales tool for Daimler India Commercial Vehicles with real-time 3D model interactions — 30% faster sales cycle.</div>
-          <a href="#" class="plink">VIEW CASE</a>
-        </div>
-      </div>
-
-      <div class="pcard">
-        <div class="pbg" style="background:linear-gradient(135deg,#001520,#0a0015);"></div>
-        <div class="pnum">02</div>
-        <div class="pc">
-          <div class="ptags">
-            <span class="ptag xr">VR</span>
-            <span class="ptag">SIMULATION</span>
-            <span class="ptag">ONGC</span>
-          </div>
-          <div class="ptitle">VR Firefighter Training</div>
-          <div class="pdesc">Life-critical VR simulation for ONGC. Real-world hazard replication, emergency protocols. 60% improved trainee retention.</div>
-          <a href="#" class="plink">VIEW CASE</a>
-        </div>
-      </div>
-
-      <div class="pcard">
-        <div class="pbg" style="background:linear-gradient(135deg,#001a08,#100018);"></div>
-        <div class="pnum">03</div>
-        <div class="pc">
-          <div class="ptags">
-            <span class="ptag">DIGITAL TWIN</span>
-            <span class="ptag xr">XR</span>
-            <span class="ptag">MERCEDES</span>
-          </div>
-          <div class="ptitle">Factory Layout Visualizer</div>
-          <div class="pdesc">Mercedes-Benz factory planning with robotic path planning. 10× accuracy improvement, 60% planning effort reduction.</div>
-          <a href="#" class="plink">VIEW CASE</a>
-        </div>
-      </div>
-
-      <div class="pcard">
-        <div class="pbg" style="background:linear-gradient(135deg,#150010,#000a1a);"></div>
-        <div class="pnum">04</div>
-        <div class="pc">
-          <div class="ptags">
-            <span class="ptag xr">VR</span>
-            <span class="ptag ai">EDU</span>
-            <span class="ptag">GOVT</span>
-          </div>
-          <div class="ptitle">MetaKalvi Platform</div>
-          <div class="pdesc">VR education platform funded by Tamil Nadu Government. Interactive STEM learning for 10,000+ students across public schools.</div>
-          <a href="#" class="plink">VIEW CASE</a>
-        </div>
-      </div>
-
-      <div class="pcard">
-        <div class="pbg" style="background:linear-gradient(135deg,#0a1200,#001018);"></div>
-        <div class="pnum">05</div>
-        <div class="pc">
-          <div class="ptags">
-            <span class="ptag ai">AI</span>
-            <span class="ptag">UNITY</span>
-            <span class="ptag">SYNTHETIC DATA</span>
-          </div>
-          <div class="ptitle">Digit Snap</div>
-          <div class="pdesc">Synthetic data engine: 4–6 real images → 5,000+ AI-ready variations. 80% faster ML training, 90% less manual data collection.</div>
-          <a href="#" class="plink">VIEW CASE</a>
-        </div>
-      </div>
-
-      <div class="pcard">
-        <div class="pbg" style="background:linear-gradient(135deg,#000e18,#150008);"></div>
-        <div class="pnum">06</div>
-        <div class="pc">
-          <div class="ptags">
-            <span class="ptag">3D VIZ</span>
-            <span class="ptag xr">XR</span>
-            <span class="ptag ai">TEMPLATE</span>
-          </div>
-          <div class="ptitle">InstaXR</div>
-          <div class="pdesc">3D visualization template framework. Reduced model setup time from 1 week to under 10 seconds — 70% team productivity boost.</div>
-          <a href="#" class="plink">VIEW CASE</a>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <!-- ══════════════════════════════════════
-       EXPERIENCE TIMELINE
-  ══════════════════════════════════════ -->
+  <!-- EXPERIENCE TIMELINE -->
   <section id="exp">
     <div class="sec-head">
       <p class="eyebrow">[ CAREER · MISSION · LOG ]</p>
       <h2 class="sec-title">EXPERIENCE<br><span class="glow">LOG</span></h2>
     </div>
-
     <div class="tl">
-
-      <div class="tli">
-        <div class="tl-date">NOV 2025 — PRESENT</div>
-        <div class="tl-role">SENIOR ENGINEER — AVA</div>
-        <div class="tl-co">// Mahindra &amp; Mahindra Ltd. · Chennai</div>
-        <div class="tl-desc">
-          <ul>
-            <li>Real-time visualization &amp; digital solutions for Advanced Vehicle Architecture development</li>
-            <li>Virtual validation and simulation activities for next-gen automotive platforms</li>
-            <li>Cross-functional collaboration with engineering teams across AVA</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tli">
-        <div class="tl-date">MAY 2024 — NOV 2025</div>
-        <div class="tl-role">XR DEVELOPER</div>
-        <div class="tl-co">// SatoriXR · Enterprise XR Studio</div>
-        <div class="tl-desc">
-          <ul>
-            <li>Led architecture &amp; delivery of 15+ enterprise XR, AI, and digital twin applications</li>
-            <li>Built InstaXR — model setup reduced from 1 week to 10 seconds (70% productivity gain)</li>
-            <li>DaimlerXRtreme AR sales tool — contributed to 30% faster sales cycle</li>
-            <li>Factory Layout Visualizer for Mercedes-Benz — 10× accuracy, 60% effort reduction</li>
-            <li>100% on-time delivery across all enterprise projects</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tli">
-        <div class="tl-date">JAN 2023 — APR 2024</div>
-        <div class="tl-role">SOFTWARE ENGINEER L2</div>
-        <div class="tl-co">// DIGIT7 · Computer Vision &amp; AI</div>
-        <div class="tl-desc">
-          <ul>
-            <li>Built "Digit Snap" — 4–6 real images → 5,000+ AI training variants via procedural rendering</li>
-            <li>Accelerated AI training pipelines by 80%, reduced manual data collection by 90%</li>
-            <li>Prototyped XR + Computer Vision + GenAI workflows (image-to-3D, real-time detection)</li>
-            <li>Integrated Unity with OpenCV, Python APIs, and TensorFlow for immersive AI-enhanced AR</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tli">
-        <div class="tl-date">MAR 2021 — JAN 2023</div>
-        <div class="tl-role">UNITY DEVELOPER</div>
-        <div class="tl-co">// Meynikara XR Technologies · Enterprise XR</div>
-        <div class="tl-desc">
-          <ul>
-            <li>Delivered 15+ AR/VR solutions for HUL, SABIC, Sanofi, Indian Oil, Vedanta &amp; more</li>
-            <li>VR firefighter training for ONGC — 60% improved trainee retention over classroom</li>
-            <li>MetaKalvi VR education (Tamil Nadu Govt) — 10,000+ students across public schools</li>
-            <li>Deployed on Meta Quest, Android, WebGL, PC VR — &gt;95% client satisfaction</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="tli">
-        <div class="tl-date">MAR 2018 — 2020</div>
-        <div class="tl-role">FOUNDER &amp; INDIE DEVELOPER</div>
-        <div class="tl-co">// ARTO Games · Independent Studio</div>
-        <div class="tl-desc">
-          <ul>
-            <li>Founded indie game studio — 5 games shipped across mobile, PC, and web</li>
-            <li>Flyfar: minimalist endless runner with 5K+ downloads on Google Play Store</li>
-            <li>Promise: narrative puzzle platformer in development for Steam &amp; Itch.io</li>
-            <li>Full ownership: design, programming, asset creation, publishing, marketing</li>
-          </ul>
-        </div>
-      </div>
-
+      <div class="tli reveal"><div class="tl-date">NOV 2025 — PRESENT</div><div class="tl-role">SENIOR ENGINEER — AVA</div><div class="tl-co">// Mahindra &amp; Mahindra Ltd. · Chennai</div><div class="tl-desc"><ul><li>Real-time visualization &amp; digital solutions for Advanced Vehicle Architecture</li><li>Virtual validation and simulation for next-gen automotive platforms</li><li>Cross-functional collaboration with engineering teams across AVA</li></ul></div></div>
+      <div class="tli reveal reveal-delay-1"><div class="tl-date">MAY 2024 — NOV 2025</div><div class="tl-role">XR DEVELOPER</div><div class="tl-co">// SatoriXR · Enterprise XR Studio</div><div class="tl-desc"><ul><li>Led 15+ enterprise XR, AI, and digital twin applications across automotive &amp; manufacturing</li><li>InstaXR framework — model setup from 1 week to 10 seconds (70% productivity gain)</li><li>DaimlerXRtreme AR sales tool — 30% faster sales cycle</li><li>Factory Layout Visualizer for Mercedes-Benz — 10× accuracy, 60% effort reduction</li></ul></div></div>
+      <div class="tli reveal reveal-delay-2"><div class="tl-date">JAN 2023 — APR 2024</div><div class="tl-role">SOFTWARE ENGINEER L2</div><div class="tl-co">// DIGIT7 · Computer Vision &amp; AI</div><div class="tl-desc"><ul><li>Digit Snap — 4–6 real images → 5,000+ AI training variants; 80% faster ML pipelines</li><li>XR + Computer Vision + GenAI prototypes: image-to-3D, real-time detection overlays</li><li>Unity integrated with OpenCV, Python APIs, TensorFlow for AI-enhanced AR</li></ul></div></div>
+      <div class="tli reveal reveal-delay-3"><div class="tl-date">MAR 2021 — JAN 2023</div><div class="tl-role">UNITY DEVELOPER</div><div class="tl-co">// Meynikara XR Technologies · Enterprise XR</div><div class="tl-desc"><ul><li>15+ AR/VR solutions: HUL, SABIC, Sanofi, Indian Oil, Vedanta — &gt;95% satisfaction</li><li>VR firefighter training for ONGC — 60% improved retention vs classroom</li><li>MetaKalvi VR education (Tamil Nadu Govt) — 10,000+ students</li></ul></div></div>
+      <div class="tli reveal reveal-delay-4"><div class="tl-date">MAR 2018 — 2020</div><div class="tl-role">FOUNDER &amp; INDIE DEVELOPER</div><div class="tl-co">// ARTO Games · Independent Studio</div><div class="tl-desc"><ul><li>5 games shipped — mobile, PC, web</li><li>Flyfar: 5K+ downloads on Google Play · Promise: narrative platformer (Steam / Itch.io)</li></ul></div></div>
     </div>
   </section>
 
 
-  <!-- ══════════════════════════════════════
-       CONTACT
-  ══════════════════════════════════════ -->
+  <!-- CONTACT -->
   <section id="contact">
     <div class="contact-box">
       <p class="eyebrow">[ INITIATE · TRANSMISSION ]</p>
@@ -440,34 +395,20 @@
       <a href="mailto:praveenunitydev@gmail.com" class="contact-email">praveenunitydev@gmail.com</a>
       <div class="socials">
         <a href="https://praveenkrishna.dev" class="sbtn" target="_blank">PORTFOLIO</a>
-        <a href="https://linkedin.com/in/YOUR-HANDLE" class="sbtn" target="_blank">LINKEDIN</a>
-        <a href="https://github.com/YOUR-HANDLE" class="sbtn" target="_blank">GITHUB</a>
+        <a href="https://linkedin.com/in/PraveenUnitydev" class="sbtn" target="_blank">LINKEDIN</a>
+        <a href="https://github.com/PraveenUnitydev" class="sbtn" target="_blank">GITHUB</a>
         <a href="tel:+918248660962" class="sbtn">+91 82486 60962</a>
       </div>
     </div>
   </section>
 
-
-  <!-- ══════════════════════════════════════
-       FOOTER
-  ══════════════════════════════════════ -->
   <footer>
     <span>© 2025 PRAVEEN KRISHNA — XR DEVELOPER</span>
     <span>BUILT WITH THREE.JS · UNITY VETERAN</span>
     <span>CHENNAI, INDIA — ALL SYSTEMS OPERATIONAL</span>
   </footer>
 
-
-  <!-- ══════════════════════════════════════
-       SCRIPTS — load order matters
-       1. Three.js (CDN)
-       2. GLTFLoader (CDN)
-       3. props.js   — floating 3D XR props (scroll-animated)
-       4. background.js — particle / shape background
-       5. ui.js — cursor, skills, glitch, nav badge
-  ══════════════════════════════════════ -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- GLTFLoader — must match Three.js version r128 exactly -->
   <script src="https://unpkg.com/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
   <script src="js/props.js"></script>
   <script src="js/background.js"></script>

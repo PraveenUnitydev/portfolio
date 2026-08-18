@@ -1017,3 +1017,424 @@ footer {
   .stat-inner { grid-template-columns: 1fr 1fr; }
   .hero-name { font-size: clamp(2.4rem, 15vw, 4rem); }
 }
+
+/* ════════════════════════════════════════════════════════
+   ADDITIONS — Project Screenshot Grid + Workflow Section
+════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────
+   HERO ROLE SUB-LINE
+───────────────────────────────────────── */
+.hero-role {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(.8rem, 1.8vw, .95rem);
+  color: rgba(200,230,240,.5);
+  margin-top: 16px;
+  letter-spacing: .1em;
+  line-height: 1.8;
+  max-width: 540px;
+  animation: fadeUp 1s .2s ease both;
+}
+.hero-role-sub {
+  font-size: .82em;
+  color: rgba(200,230,240,.3);
+  display: block;
+}
+
+/* ─────────────────────────────────────────
+   PROJECT CARDS — Screenshot-based
+───────────────────────────────────────── */
+#projects { padding: 110px 0 60px; }
+
+/* Featured 2-column row */
+.proj-featured {
+  max-width: 900px;
+  margin: 0 auto 3px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+}
+
+/* Standard 3-column grid */
+.proj-grid {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+}
+
+/* Base card */
+.pcard {
+  position: relative;
+  overflow: hidden;
+  background: #080c10;
+  border: 1px solid rgba(255,255,255,.05);
+  display: flex;
+  flex-direction: column;
+  transition: border-color .35s, box-shadow .35s;
+  min-height: 280px;
+}
+.pcard:hover {
+  border-color: rgba(0,245,255,.25);
+  box-shadow: 0 0 40px rgba(0,245,255,.06);
+}
+.pcard--large { min-height: 340px; }
+
+/* Screenshot image area */
+.pcard-img {
+  flex: 0 0 55%;
+  background-image: var(--img, none);
+  background-size: cover;
+  background-position: center top;
+  position: relative;
+  /* Fallback pattern when no image set */
+  background-color: #0a0f14;
+}
+/* Placeholder grid pattern when no screenshot */
+.pcard-img::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,245,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+/* Label shown when no screenshot */
+.pcard-img::after {
+  content: 'ADD SCREENSHOT';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem;
+  color: rgba(0,245,255,.2);
+  letter-spacing: .2em;
+}
+/* Hide "ADD SCREENSHOT" text if real image is set */
+.pcard[style*="url('images/projects/"] .pcard-img::after,
+.pcard[style*='url("images/projects/'] .pcard-img::after {
+  display: none;
+}
+/* Dark overlay on hover reveal */
+.pcard-img::before {
+  transition: opacity .35s;
+}
+.pcard:hover .pcard-img::before {
+  opacity: 0.4;
+}
+/* Gradient fade into body */
+.pcard-img {
+  -webkit-mask-image: linear-gradient(180deg, black 60%, transparent 100%);
+  mask-image: linear-gradient(180deg, black 60%, transparent 100%);
+}
+
+/* Card body */
+.pcard-body {
+  flex: 1;
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Project number watermark */
+.pnum {
+  position: absolute;
+  top: 14px; right: 16px;
+  z-index: 3;
+  font-family: 'Orbitron', monospace;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: rgba(255,255,255,.04);
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Tags */
+.ptags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ptag {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .55rem;
+  color: var(--cyan);
+  border: 1px solid rgba(0,245,255,.2);
+  padding: 2px 8px;
+  letter-spacing: .08em;
+  background: rgba(0,245,255,.03);
+}
+.ptag.xr { color: var(--magenta); border-color: rgba(255,0,170,.2); background: rgba(255,0,170,.03); }
+.ptag.ai { color: var(--gold);    border-color: rgba(255,215,0,.2); background: rgba(255,215,0,.025); }
+
+.ptitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .92rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.pdesc {
+  font-size: .8rem;
+  color: rgba(200,230,240,.42);
+  line-height: 1.6;
+}
+.pdesc strong { color: rgba(200,230,240,.75); font-weight: 600; }
+
+.pmeta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.pmeta-item {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem;
+  color: rgba(0,245,255,.35);
+  letter-spacing: .08em;
+}
+
+.plink {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: var(--cyan);
+  text-decoration: none;
+  letter-spacing: .12em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 8px;
+  transition: gap .2s, opacity .2s;
+  width: fit-content;
+}
+.plink:hover { gap: 12px; }
+.plink span { transition: transform .2s; }
+.plink:hover span { transform: translateX(4px); }
+
+/* Screenshot hint text */
+.proj-hint {
+  max-width: 900px;
+  margin: 16px auto 0;
+  padding: 0 24px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: rgba(0,245,255,.2);
+  letter-spacing: .06em;
+  line-height: 1.6;
+}
+.proj-hint code {
+  color: rgba(0,245,255,.4);
+  background: rgba(0,245,255,.04);
+  padding: 1px 5px;
+  border-radius: 2px;
+}
+
+
+/* ─────────────────────────────────────────
+   ENGINEERING WORKFLOW SECTION
+───────────────────────────────────────── */
+#workflow { padding: 110px 0; }
+
+.workflow-wrap {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Pipeline row */
+.wf-pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 32px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.wf-pipeline::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+}
+
+.wf-step {
+  flex: 1;
+  text-align: center;
+  padding: 8px 12px;
+}
+.wf-step-icon {
+  width: 40px; height: 40px;
+  margin: 0 auto 10px;
+  color: var(--cyan);
+  opacity: .7;
+}
+.wf-step-icon svg { width: 100%; height: 100%; }
+.wf-step-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .65rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .12em;
+  margin-bottom: 4px;
+}
+.wf-step-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem;
+  color: rgba(200,230,240,.3);
+  letter-spacing: .06em;
+}
+
+.wf-arrow {
+  font-size: 1.2rem;
+  color: rgba(0,245,255,.25);
+  flex-shrink: 0;
+  padding: 0 2px;
+}
+
+/* Case study card */
+.wf-case {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 32px;
+  align-items: start;
+}
+.wf-case-tag {
+  grid-column: 1 / -1;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .62rem;
+  color: var(--magenta);
+  letter-spacing: .2em;
+  margin-bottom: 4px;
+}
+.wf-case-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.wf-case-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.wf-case-step:last-child { border-bottom: none; }
+.wf-cs-num {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--cyan);
+  opacity: .5;
+  flex-shrink: 0;
+  width: 24px;
+  margin-top: 2px;
+}
+.wf-cs-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .08em;
+  margin-bottom: 3px;
+}
+.wf-cs-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .6rem;
+  color: rgba(200,230,240,.35);
+  letter-spacing: .05em;
+}
+.wf-case-arrow {
+  font-size: 1rem;
+  color: rgba(0,245,255,.2);
+  padding-left: 40px;
+}
+
+.wf-case-result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  padding: 16px 24px;
+  background: rgba(0,245,255,.03);
+  border: 1px solid rgba(0,245,255,.08);
+  text-align: center;
+  align-self: center;
+  min-width: 130px;
+}
+.wf-result-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--cyan);
+  text-shadow: 0 0 20px rgba(0,245,255,.4);
+  display: block;
+}
+.wf-result-lbl {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem;
+  color: rgba(200,230,240,.3);
+  letter-spacing: .1em;
+  display: block;
+  margin-top: -10px;
+}
+
+/* Tech stack pills */
+.wf-stack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+}
+.wf-stack-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .6rem;
+  color: var(--magenta);
+  letter-spacing: .2em;
+  margin-bottom: 12px;
+}
+.wf-pills { display: flex; flex-wrap: wrap; gap: 6px; }
+.wpill {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .58rem;
+  color: rgba(200,230,240,.55);
+  border: 1px solid rgba(255,255,255,.07);
+  padding: 3px 10px;
+  letter-spacing: .06em;
+  background: rgba(255,255,255,.02);
+  transition: border-color .2s, color .2s;
+}
+.wpill:hover {
+  border-color: rgba(0,245,255,.3);
+  color: var(--cyan);
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE ADDITIONS
+───────────────────────────────────────── */
+@media (max-width: 900px) {
+  .proj-featured { grid-template-columns: 1fr; }
+  .proj-grid     { grid-template-columns: 1fr; }
+  .wf-pipeline   { flex-wrap: wrap; justify-content: center; }
+  .wf-arrow      { display: none; }
+  .wf-case       { grid-template-columns: 1fr; }
+  .wf-case-result { flex-direction: row; min-width: unset; width: 100%; }
+  .wf-stack      { grid-template-columns: 1fr; }
+}
