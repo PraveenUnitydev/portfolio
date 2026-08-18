@@ -1,8 +1,2 @@
-/* props.js — models removed, canvas hidden on mobile */
-(function () {
-  /* The 3D scene is now entirely in background.js.
-     This file just ensures the old props canvas
-     (if any residual element exists) is gone. */
-  const old = document.getElementById('props-canvas');
-  if (old) old.remove();
-}());
+/* props.js — cleared. Scene is in background.js */
+(function(){const c=document.getElementById('props-canvas');if(c)c.remove();}());

@@ -1,25 +1,23 @@
 /* ════════════════════════════════════════════════════════
-   background.js — Neural Aurora  v4
+   background.js — Aurora Ribbons  v5
 
-   A 14,000-particle flow field that creates aurora-like
-   ribbons flowing through 3D noise. Combined with a
-   morphing wireframe sphere that breathes organically.
+   CONCEPT: Flowing silk-like ribbon strips made of
+   triangle meshes, evolving parametric paths (Lissajous),
+   additive blending so crossing ribbons glow at intersections.
+   Combined with particle atmosphere + morphing sphere.
 
-   Technique:
-   • Each particle follows a vector field derived from
-     3 offset noise functions (curl-like flow)
-   • Additive blending: overlapping streams glow brighter
-   • Two layers: small bright particles + large soft halo
-   • Color gradient: cyan (top) → indigo → rose (bottom)
-   • Speed brightness: faster = whiter/brighter
-   • Central morphing sphere that pulses and deforms
+   SCENE:
+   1. 7 Aurora Ribbons  — mesh strips, gradient colors, flowing paths
+   2. Particle Atmosphere — 5K soft depth particles
+   3. Morphing Sphere    — wireframe core that breathes
+   4. Subtle Grid        — ground reference
 ════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
 
   const isMobile = window.innerWidth < 768;
 
-  /* ── RENDERER ──────────────────────────────────────── */
+  /* ── RENDERER ─────────────────────────────────────── */
   const canvas   = document.getElementById('bgc');
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
   renderer.setPixelRatio(Math.min(devicePixelRatio, isMobile ? 1.5 : 2));
@@ -27,291 +25,256 @@
   renderer.setClearColor(0x000000, 0);
 
   const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 300);
-  camera.position.z = 30;
+  const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 300);
+  camera.position.z = 32;
 
-  /* ── PARTICLE COUNT (performance-scaled) ───────────── */
-  const N = isMobile ? 5000 : 14000;
+  /* ════════════════════════════════════════════════════
+     1. AURORA RIBBONS
+     Each ribbon is a strip of quads following a parametric
+     path that slowly evolves. Additive blending makes
+     ribbon crossings glow naturally.
+  ════════════════════════════════════════════════════ */
+  const SEGS = isMobile ? 80 : 160;  // segments per ribbon
 
-  /* ── BUFFERS ───────────────────────────────────────── */
-  const positions  = new Float32Array(N * 3);
-  const colors     = new Float32Array(N * 3);
-  const velocities = new Float32Array(N * 3);
-  const phases     = new Float32Array(N);
+  /* Ribbon configuration: path params + visual style */
+  const RIBBON_CFGS = [
+    // Long horizontal sweeps — cyan to indigo
+    { ax:26, ay: 9, az:5, fx:1.0, fy:2.0, fz:1.5, px:0.0, py:0.0, pz:0.0, sx:0.28, sy:0.22, sz:0.20, w:1.0, c1:[0.15,0.72,0.98], c2:[0.50,0.54,0.97] },
+    { ax:24, ay:11, az:4, fx:2.0, fy:1.0, fz:2.0, px:1.0, py:1.5, pz:0.5, sx:0.20, sy:0.30, sz:0.25, w:0.75, c1:[0.50,0.54,0.97], c2:[0.96,0.44,0.71] },
+    // Diagonal ribbon — rose to amber
+    { ax:22, ay:13, az:6, fx:1.5, fy:1.5, fz:1.0, px:2.0, py:3.0, pz:1.0, sx:0.35, sy:0.18, sz:0.28, w:0.65, c1:[0.96,0.44,0.71], c2:[0.99,0.75,0.14] },
+    // Wide sweeping — indigo to cyan
+    { ax:28, ay: 8, az:7, fx:0.5, fy:2.5, fz:1.5, px:0.5, py:4.0, pz:2.0, sx:0.18, sy:0.32, sz:0.22, w:1.2, c1:[0.50,0.54,0.97], c2:[0.15,0.72,0.98] },
+    // Thin accent — cyan only
+    { ax:20, ay:10, az:3, fx:3.0, fy:1.0, fz:2.0, px:3.0, py:0.5, pz:1.5, sx:0.40, sy:0.15, sz:0.30, w:0.40, c1:[0.22,0.85,1.00], c2:[0.40,0.65,1.00] },
+    // Deep ribbon — amber to rose
+    { ax:25, ay:12, az:5, fx:1.0, fy:3.0, fz:1.0, px:4.0, py:2.5, pz:3.0, sx:0.22, sy:0.38, sz:0.18, w:0.55, c1:[0.99,0.75,0.14], c2:[0.96,0.44,0.71] },
+    // Flowing side ribbon — indigo
+    { ax:18, ay:15, az:8, fx:2.0, fy:2.0, fz:0.5, px:1.5, py:1.0, pz:0.8, sx:0.30, sy:0.25, sz:0.35, w:0.50, c1:[0.42,0.44,0.95], c2:[0.15,0.72,0.98] },
+  ];
 
-  /* ── INITIALISE PARTICLES ──────────────────────────── */
-  for (let i = 0; i < N; i++) {
-    // Spread in a elongated cloud
-    const theta = Math.random() * Math.PI * 2;
-    const r = 6 + Math.random() * 16;
-    positions[i*3]   = (Math.cos(theta) * r + (Math.random() - 0.5) * 6);
-    positions[i*3+1] = (Math.random() - 0.5) * 26;
-    positions[i*3+2] = (Math.sin(theta) * r * 0.35) - 4;
+  /* Build ribbon geometry (static, updated each frame) */
+  function buildRibbonGeo() {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array(SEGS * 2 * 3);
+    const colors    = new Float32Array(SEGS * 2 * 3);
 
-    velocities[i*3]   = (Math.random() - 0.5) * 0.01;
-    velocities[i*3+1] = (Math.random() - 0.5) * 0.01;
-    velocities[i*3+2] = (Math.random() - 0.5) * 0.005;
+    const indices = [];
+    for (let i = 0; i < SEGS - 1; i++) {
+      const a = i*2, b = i*2+1, c = (i+1)*2, d = (i+1)*2+1;
+      indices.push(a,c,b, b,c,d);
+    }
 
-    phases[i] = Math.random() * Math.PI * 2;
-
-    // Default color
-    colors[i*3] = 0.22; colors[i*3+1] = 0.74; colors[i*3+2] = 0.98;
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
+    geo.setIndex(indices);
+    return geo;
   }
 
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
-
-  /* ── PARTICLE MATERIALS (two layers for glow) ──────── */
-  // Layer 1: small, crisp, bright (the actual streams)
-  const matCrisp = new THREE.PointsMaterial({
-    size: isMobile ? 0.11 : 0.09,
-    vertexColors: true,
-    transparent: true, opacity: 0.90,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-
-  // Layer 2: large, soft, dim (the halo glow around streams)
-  const matGlow = new THREE.PointsMaterial({
-    size: isMobile ? 0.50 : 0.40,
-    vertexColors: true,
-    transparent: true, opacity: 0.12,
-    blending: THREE.AdditiveBlending,
-    depthWrite: false,
-  });
-
-  scene.add(new THREE.Points(geo, matCrisp));
-  scene.add(new THREE.Points(geo, matGlow));
-
-  /* ── MORPHING WIREFRAME SPHERE ─────────────────────── */
-  // Create sphere geometry and store original vertices
-  const sphereGeo    = new THREE.SphereGeometry(5.5, isMobile ? 28 : 48, isMobile ? 28 : 48);
-  const origSpherePos = sphereGeo.attributes.position.array.slice(); // snapshot
-
-  const sphereMesh = new THREE.Mesh(sphereGeo, new THREE.MeshBasicMaterial({
-    color: 0x38bdf8,
-    wireframe: true,
-    transparent: true,
-    opacity: isMobile ? 0.06 : 0.07,
-  }));
-  scene.add(sphereMesh);
-
-  // Inner solid sphere (very faint glow fill)
-  const innerSphere = new THREE.Mesh(
-    new THREE.SphereGeometry(5.5, 16, 16),
-    new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.015 })
-  );
-  scene.add(innerSphere);
-
-  // Three orbit rings around the sphere
-  const RING_COLORS = [0x38bdf8, 0x818cf8, 0xf472b6];
-  const rings = RING_COLORS.map((color, i) => {
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(6.5 + i * 1.8, 0.013, 4, 120),
-      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.18 - i * 0.04 })
-    );
-    ring.rotation.x = i * 0.55;
-    ring.rotation.z = i * 0.35;
-    scene.add(ring);
-    return ring;
-  });
-
-  // Orbit dot trails on each ring
-  RING_COLORS.forEach((color, i) => {
-    const dGeo = new THREE.BufferGeometry();
-    const dPos = new Float32Array(200 * 3);
-    const radius = 6.5 + i * 1.8;
-    for (let j = 0; j < 200; j++) {
-      const a = (j / 200) * Math.PI * 2;
-      dPos[j*3] = Math.cos(a) * radius;
-      dPos[j*3+1] = 0;
-      dPos[j*3+2] = Math.sin(a) * radius;
-    }
-    dGeo.setAttribute('position', new THREE.BufferAttribute(dPos, 3));
-    const dotCloud = new THREE.Points(dGeo, new THREE.PointsMaterial({
-      color, size: 0.04, transparent: true, opacity: 0.35,
-      blending: THREE.AdditiveBlending, depthWrite: false,
+  /* Create ribbon mesh (core + glow layer) */
+  function createRibbon() {
+    const geo  = buildRibbonGeo();
+    const core = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+      vertexColors: true, transparent: true, opacity: 0.35,
+      blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
     }));
-    dotCloud.rotation.x = rings[i].rotation.x;
-    dotCloud.rotation.z = rings[i].rotation.z;
-    scene.add(dotCloud);
-    rings[i].userData.dots = dotCloud;
+    const glow = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+      vertexColors: true, transparent: true, opacity: 0.08,
+      blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
+    }));
+    scene.add(core);
+    scene.add(glow);
+    return { geo, core, glow };
+  }
+
+  /* Update ribbon vertices along its parametric path */
+  function updateRibbon(ribbon, cfg, t) {
+    const pos = ribbon.geo.attributes.position.array;
+    const col = ribbon.geo.attributes.color.array;
+
+    // Scale glow geometry slightly wider than core
+    ribbon.glow.scale.set(1.05, 1.05, 1.05);
+
+    for (let i = 0; i < SEGS; i++) {
+      const u  = i / (SEGS - 1);       // 0..1 along ribbon
+      const u2 = (i + 0.5) / (SEGS - 1);
+
+      /* Parametric path — Lissajous family */
+      const px = cfg.ax * Math.sin(cfg.fx * u * Math.PI * 2 + cfg.px + t * cfg.sx);
+      const py = cfg.ay * Math.sin(cfg.fy * u * Math.PI * 2 + cfg.py + t * cfg.sy);
+      const pz = cfg.az * Math.cos(cfg.fz * u * Math.PI * 2 + cfg.pz + t * cfg.sz);
+
+      /* Tangent (finite diff for ribbon orientation) */
+      const px2 = cfg.ax * Math.sin(cfg.fx * u2 * Math.PI * 2 + cfg.px + t * cfg.sx);
+      const py2 = cfg.ay * Math.sin(cfg.fy * u2 * Math.PI * 2 + cfg.py + t * cfg.sy);
+      const pz2 = cfg.az * Math.cos(cfg.fz * u2 * Math.PI * 2 + cfg.pz + t * cfg.sz);
+      let tx = px2-px, ty = py2-py, tz = pz2-pz;
+      const tl = Math.sqrt(tx*tx+ty*ty+tz*tz) || 1;
+      tx/=tl; ty/=tl; tz/=tl;
+
+      /* Ribbon normal = tangent × world-up */
+      let nx = ty*0 - tz*1;
+      let ny = tz*0 - tx*0;
+      let nz = tx*1 - ty*0;
+      const nl = Math.sqrt(nx*nx+ny*ny+nz*nz) || 1;
+      nx/=nl; ny/=nl; nz/=nl;
+
+      /* Width: tapers at ends, pulses */
+      const taper  = Math.sin(u * Math.PI);          // 0 at tips, 1 at center
+      const pulse  = 1 + 0.18 * Math.sin(t*2.2 + u*9 + cfg.px);
+      const half   = cfg.w * taper * pulse;
+
+      /* Two edge verts of the strip */
+      const ix = i * 2;
+      pos[ix*3]   = px - nx*half; pos[ix*3+1] = py - ny*half; pos[ix*3+2] = pz - nz*half;
+      pos[(ix+1)*3]   = px + nx*half; pos[(ix+1)*3+1] = py + ny*half; pos[(ix+1)*3+2] = pz + nz*half;
+
+      /* Color gradient along ribbon length */
+      const [r1,g1,b1] = cfg.c1, [r2,g2,b2] = cfg.c2;
+      // Add slight brightness pulse near center
+      const bright = 0.85 + 0.15 * taper;
+      const r = (r1 + (r2-r1)*u) * bright;
+      const g = (g1 + (g2-g1)*u) * bright;
+      const b = (b1 + (b2-b1)*u) * bright;
+      col[ix*3]=r; col[ix*3+1]=g; col[ix*3+2]=b;
+      col[(ix+1)*3]=r; col[(ix+1)*3+1]=g; col[(ix+1)*3+2]=b;
+    }
+
+    ribbon.geo.attributes.position.needsUpdate = true;
+    ribbon.geo.attributes.color.needsUpdate    = true;
+    ribbon.geo.computeBoundingSphere();
+  }
+
+  /* Create all ribbons (skip last 2 on mobile for performance) */
+  const ribbonCount = isMobile ? 4 : RIBBON_CFGS.length;
+  const ribbons = RIBBON_CFGS.slice(0, ribbonCount).map(() => createRibbon());
+
+  /* ════════════════════════════════════════════════════
+     2. PARTICLE ATMOSPHERE (soft depth)
+  ════════════════════════════════════════════════════ */
+  const PN   = isMobile ? 2500 : 5000;
+  const pGeo = new THREE.BufferGeometry();
+  const pPos = new Float32Array(PN * 3);
+  const pCol = new Float32Array(PN * 3);
+  const pVel = new Float32Array(PN * 3);
+
+  const ATM_COLORS = [
+    [0.22,0.74,0.98], // cyan
+    [0.50,0.54,0.97], // indigo
+    [0.96,0.44,0.71], // rose
+    [0.60,0.70,0.90], // blue-white
+  ];
+
+  for (let i = 0; i < PN; i++) {
+    pPos[i*3]   = (Math.random()-0.5)*70;
+    pPos[i*3+1] = (Math.random()-0.5)*50;
+    pPos[i*3+2] = (Math.random()-0.5)*30 - 8;
+    pVel[i*3]   = (Math.random()-0.5)*0.008;
+    pVel[i*3+1] = (Math.random()-0.5)*0.006;
+    pVel[i*3+2] = 0;
+    const c = ATM_COLORS[i % ATM_COLORS.length];
+    pCol[i*3]=c[0]; pCol[i*3+1]=c[1]; pCol[i*3+2]=c[2];
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  pGeo.setAttribute('color',    new THREE.BufferAttribute(pCol, 3));
+  scene.add(new THREE.Points(pGeo, new THREE.PointsMaterial({
+    size: isMobile ? 0.10 : 0.08,
+    vertexColors: true, transparent: true, opacity: 0.5,
+    blending: THREE.AdditiveBlending, depthWrite: false,
+  })));
+
+  /* ════════════════════════════════════════════════════
+     3. MORPHING WIREFRAME SPHERE
+  ════════════════════════════════════════════════════ */
+  const sGeo  = new THREE.SphereGeometry(4.5, isMobile ? 24 : 44, isMobile ? 24 : 44);
+  const sOrig = sGeo.attributes.position.array.slice();
+
+  const sphere = new THREE.Mesh(sGeo, new THREE.MeshBasicMaterial({
+    color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.06,
+  }));
+  scene.add(sphere);
+
+  /* Inner fill */
+  scene.add(new THREE.Mesh(
+    new THREE.SphereGeometry(4.5, 12, 12),
+    new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.012 })
+  ));
+
+  /* Orbit rings around sphere */
+  const RING_COLS = [0x38bdf8, 0x818cf8, 0xf472b6];
+  const rings = RING_COLS.map((col, i) => {
+    const r = new THREE.Mesh(
+      new THREE.TorusGeometry(5.8 + i*1.6, 0.012, 4, 110),
+      new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.20 - i*0.05,
+        blending: THREE.AdditiveBlending, depthWrite: false })
+    );
+    r.rotation.x = i * 0.6; r.rotation.z = i * 0.4;
+    scene.add(r);
+    return r;
   });
 
-  /* ── SUBTLE GROUND GRID ────────────────────────────── */
-  const grid = new THREE.GridHelper(200, 60, 0x1e3a5a, 0x1e3a5a);
-  grid.material.transparent = true; grid.material.opacity = 0.08;
-  grid.position.y = -14;
+  /* ════════════════════════════════════════════════════
+     4. GRID
+  ════════════════════════════════════════════════════ */
+  const grid = new THREE.GridHelper(220, 55, 0x1a3050, 0x1a3050);
+  grid.material.transparent = true; grid.material.opacity = 0.07;
+  grid.position.y = -16;
   scene.add(grid);
 
-  /* ── NOISE FUNCTION (fast, smooth, no library needed) ─
-     Composed sin/cos at varying frequencies creates
-     smooth pseudo-random fields similar to Perlin noise */
-  function noise(x, y, z, t) {
-    const S = 0.17, T = 0.38;
-    return (
-      Math.sin(x*S       + t*T)       * Math.cos(y*S*0.8  + t*T*0.7) +
-      Math.sin(y*S       + z*S*0.9    + t*T*0.55) * 0.60 +
-      Math.cos(z*S*0.75  + x*S*0.5   + t*T*0.80) * 0.40
-    ) * 0.48;
-  }
-
-  /* ── COLOR FUNCTION ────────────────────────────────── */
-  // Maps particle Y position → gradient: cyan/indigo/rose
-  // Speed boosts brightness (fast streams glow white)
-  const C_CYAN   = [0.22, 0.74, 0.98];
-  const C_INDIGO = [0.51, 0.55, 0.97];
-  const C_ROSE   = [0.96, 0.45, 0.71];
-
-  function updateColor(i, py, speed, t) {
-    const ny  = Math.max(0, Math.min(1, (py + 13) / 26));
-    const bright = Math.min(1.8, 0.65 + speed * 60);
-
-    let r, g, b;
-    if (ny > 0.60) {
-      const f = (ny - 0.60) / 0.40;
-      r = C_INDIGO[0] + (C_CYAN[0]   - C_INDIGO[0]) * f;
-      g = C_INDIGO[1] + (C_CYAN[1]   - C_INDIGO[1]) * f;
-      b = C_INDIGO[2] + (C_CYAN[2]   - C_INDIGO[2]) * f;
-    } else if (ny > 0.28) {
-      const f = (ny - 0.28) / 0.32;
-      r = C_ROSE[0] + (C_INDIGO[0] - C_ROSE[0]) * f;
-      g = C_ROSE[1] + (C_INDIGO[1] - C_ROSE[1]) * f;
-      b = C_ROSE[2] + (C_INDIGO[2] - C_ROSE[2]) * f;
-    } else {
-      r = C_ROSE[0]; g = C_ROSE[1]; b = C_ROSE[2];
-    }
-
-    colors[i*3]   = Math.min(1, r * bright);
-    colors[i*3+1] = Math.min(1, g * bright);
-    colors[i*3+2] = Math.min(1, b * bright);
-  }
-
   /* ── INPUT ─────────────────────────────────────────── */
-  let mouseX = 0, mouseY = 0, scrollY = 0;
-  let smoothMX = 0, smoothMY = 0;
-
+  let mx = 0, my = 0, sy = 0, smx = 0, smy = 0;
   document.addEventListener('mousemove', e => {
-    mouseX = (e.clientX / innerWidth)  * 2 - 1;
-    mouseY = -(e.clientY / innerHeight) * 2 + 1;
+    mx = (e.clientX/innerWidth)*2-1; my = -(e.clientY/innerHeight)*2+1;
   });
-  window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+  window.addEventListener('scroll', () => { sy = window.scrollY; }, { passive:true });
   window.addEventListener('resize', () => {
-    camera.aspect = innerWidth / innerHeight;
+    camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
   });
 
-  /* ── BOUNDS for particle wrapping ──────────────────── */
-  const BX = 24, BY = 15, BZ = 12;
-  /* flow speed */
-  const SPD = 0.009;
-
-  /* ── ANIMATION LOOP ────────────────────────────────── */
+  /* ── ANIMATE ───────────────────────────────────────── */
   let t = 0;
-
   (function loop() {
     requestAnimationFrame(loop);
     t += 0.007;
 
-    /* Camera parallax */
-    smoothMX += (mouseX - smoothMX) * 0.05;
-    smoothMY += (mouseY - smoothMY) * 0.05;
-    camera.position.x += (smoothMX * 3.0 - camera.position.x) * 0.04;
-    camera.position.y += (smoothMY * 2.0 - scrollY * 0.0007 - camera.position.y) * 0.04;
-    camera.lookAt(0, 0, 0);
+    smx += (mx-smx)*0.04; smy += (my-smy)*0.04;
+    camera.position.x += (smx*3.5 - camera.position.x)*0.04;
+    camera.position.y += (smy*2.0 - sy*0.0006 - camera.position.y)*0.04;
+    camera.lookAt(0,0,0);
 
-    /* ── MORPHING SPHERE ────────────────────────────── */
-    const sv = sphereGeo.attributes.position.array;
-    for (let i = 0; i < sv.length / 3; i++) {
-      const ox = origSpherePos[i*3], oy = origSpherePos[i*3+1], oz = origSpherePos[i*3+2];
-      const len = Math.sqrt(ox*ox + oy*oy + oz*oz);
-      // Displace each vertex along its normal using noise
-      const d = 0.0 +
-        Math.sin(ox * 0.4 + t * 0.9)  * Math.cos(oy * 0.35 + t * 0.7) * 0.7 +
-        Math.cos(oz * 0.45 + t * 0.8) * Math.sin(ox * 0.3  + t * 1.1) * 0.5;
-      const scale = (len + d) / len;
-      sv[i*3]   = ox * scale;
-      sv[i*3+1] = oy * scale;
-      sv[i*3+2] = oz * scale;
+    /* Update ribbons */
+    ribbons.forEach((rib, i) => updateRibbon(rib, RIBBON_CFGS[i], t));
+
+    /* Morph sphere */
+    const sv = sGeo.attributes.position.array;
+    for (let i = 0; i < sv.length/3; i++) {
+      const ox=sOrig[i*3], oy=sOrig[i*3+1], oz=sOrig[i*3+2];
+      const len = Math.sqrt(ox*ox+oy*oy+oz*oz) || 1;
+      const d = Math.sin(ox*0.38+t*0.85)*Math.cos(oy*0.32+t*0.65)*0.65
+              + Math.cos(oz*0.42+t*0.75)*Math.sin(ox*0.28+t*1.10)*0.45;
+      const s = (len+d)/len;
+      sv[i*3]=ox*s; sv[i*3+1]=oy*s; sv[i*3+2]=oz*s;
     }
-    sphereGeo.attributes.position.needsUpdate = true;
-    sphereGeo.computeVertexNormals();
-    sphereMesh.rotation.y += 0.002;
-    sphereMesh.rotation.x += 0.001;
+    sGeo.attributes.position.needsUpdate = true;
+    sphere.rotation.y += 0.003; sphere.rotation.x += 0.001;
+    sphere.material.opacity = 0.045 + 0.022*Math.sin(t*0.75);
 
-    // Opacity pulse
-    sphereMesh.material.opacity = 0.05 + 0.025 * Math.sin(t * 0.8);
-    innerSphere.material.opacity = 0.01 + 0.01 * Math.sin(t * 0.8);
+    /* Spin rings */
+    rings.forEach((r,i) => { r.rotation.z += 0.004+i*0.001; r.rotation.y += 0.002; });
 
-    /* ── ORBIT RINGS ────────────────────────────────── */
-    rings.forEach((ring, i) => {
-      ring.rotation.z += 0.004 + i * 0.001;
-      ring.rotation.y += 0.002 + i * 0.0005;
-      if (ring.userData.dots) {
-        ring.userData.dots.rotation.z = ring.rotation.z;
-        ring.userData.dots.rotation.y = ring.rotation.y;
-        ring.userData.dots.rotation.x = ring.rotation.x;
-      }
-    });
-
-    /* ── PARTICLE FLOW FIELD ────────────────────────── */
-    const pos = geo.attributes.position.array;
-
-    for (let i = 0; i < N; i++) {
-      const ix = i*3, iy = i*3+1, iz = i*3+2;
-      let px = pos[ix], py = pos[iy], pz = pos[iz];
-
-      /* Curl-like flow: three offset noise samples */
-      const fx =  noise(px,  py,  pz,  t);
-      const fy =  noise(py,  pz,  px,  t + 1.7);
-      const fz =  noise(pz,  px,  py,  t + 3.4) * 0.4;
-
-      /* Soft sphere repulsion — particles flow AROUND sphere */
-      const dx = px, dy = py, dz = pz;
-      const dSq = dx*dx + dy*dy + dz*dz;
-      const rSq = 36; // sphere radius^2 ≈ 6²
-      let repX = 0, repY = 0, repZ = 0;
-      if (dSq < rSq * 1.8 && dSq > 0.01) {
-        const pushStr = (rSq * 1.8 - dSq) / (rSq * 1.8) * 0.004;
-        const invD = 1.0 / Math.sqrt(dSq);
-        repX = dx * invD * pushStr;
-        repY = dy * invD * pushStr;
-        repZ = dz * invD * pushStr;
-      }
-
-      /* Weak centripetal pull — keeps cloud together */
-      const distSq = px*px + py*py*0.3 + pz*pz;
-      const pull = distSq > 180 ? 0.0025 : 0;
-
-      velocities[ix] = velocities[ix] * 0.91 + fx * SPD + repX - px * pull + smoothMX * 0.0006;
-      velocities[iy] = velocities[iy] * 0.91 + fy * SPD * 0.65 + repY - py * pull * 0.4 + smoothMY * 0.0004;
-      velocities[iz] = velocities[iz] * 0.91 + fz * SPD * 0.45 + repZ - pz * pull;
-
-      px += velocities[ix];
-      py += velocities[iy];
-      pz += velocities[iz];
-
-      /* Wrap out-of-bounds particles to opposite side */
-      if (px > BX)  px = -BX + 0.1; else if (px < -BX) px = BX - 0.1;
-      if (py > BY)  py = -BY + 0.1; else if (py < -BY) py = BY - 0.1;
-      if (pz > BZ)  pz = -BZ + 0.1; else if (pz < -BZ) pz = BZ - 0.1;
-
-      pos[ix] = px; pos[iy] = py; pos[iz] = pz;
-
-      /* Speed → brightness */
-      const speed = Math.abs(velocities[ix]) + Math.abs(velocities[iy]) + Math.abs(velocities[iz]);
-      updateColor(i, py, speed, t);
+    /* Particle drift (gentle, no noise — ribbons are the hero) */
+    const pa = pGeo.attributes.position.array;
+    for (let i=0; i<PN; i++) {
+      pa[i*3]   += pVel[i*3];
+      pa[i*3+1] += pVel[i*3+1] + Math.sin(t+i*0.07)*0.001;
+      if (Math.abs(pa[i*3])>38) pa[i*3]*=-0.98;
+      if (Math.abs(pa[i*3+1])>28) pa[i*3+1]*=-0.98;
     }
+    pGeo.attributes.position.needsUpdate = true;
 
-    geo.attributes.position.needsUpdate = true;
-    geo.attributes.color.needsUpdate = true;
-
-    /* Grid soft pulse */
-    grid.material.opacity = 0.06 + 0.025 * Math.sin(t * 0.35);
-
+    grid.material.opacity = 0.05+0.025*Math.sin(t*0.35);
     renderer.render(scene, camera);
   }());
-
 }());
