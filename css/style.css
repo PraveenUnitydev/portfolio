@@ -867,3 +867,38 @@ footer {
 }
 
 @keyframes spulse { 0%,100%{opacity:.25;} 50%{opacity:.7;} }
+
+/* ── VIGNETTE (frames the scene, helps text visibility) */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    transparent 30%,
+    rgba(6, 11, 24, 0.55) 70%,
+    rgba(6, 11, 24, 0.85) 100%
+  );
+}
+
+/* ── HERO text shadow for readability over particles ── */
+.hero-name {
+  filter: drop-shadow(0 0 40px rgba(56,189,248,0.15));
+}
+.hero-tag, .hero-role, .hero-role-sub {
+  text-shadow: 0 2px 20px rgba(6,11,24,0.8);
+}
+
+/* ── SECTION BG — slight frost so text pops over scene  */
+section {
+  background: rgba(6, 11, 24, 0.0); /* transparent by default */
+}
+/* Sections below hero get very subtle dark wash */
+#projects, #workflow, #skills, #xpsec, #exp {
+  background: linear-gradient(
+    180deg,
+    rgba(6,11,24,0) 0%,
+    rgba(6,11,24,0.3) 8%,
+    rgba(6,11,24,0.3) 92%,
+    rgba(6,11,24,0) 100%
+  );
+}
