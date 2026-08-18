@@ -31,7 +31,7 @@
     {
       id:          'headset',
       glb:         'models/apple-vision-pro.glb',
-      color:       0x00f5ff,
+      color:       0x38bdf8,
       restX:        6.0,   restY:  0.5,
       enterX:      16.0,   enterY: 0.5,
       modelScale:   1.6,
@@ -43,7 +43,7 @@
     {
       id:          'controller',
       glb:         'models/controller-white.glb',
-      color:       0xff00aa,
+      color:       0x818cf8,
       restX:       -5.6,   restY: -0.8,
       enterX:     -16.0,   enterY: -0.8,
       modelScale:   1.2,
@@ -55,7 +55,7 @@
     {
       id:          'extra',
       glb:         '',            // drop a 3rd GLB here when ready
-      color:       0x39ff14,
+      color:       0x34d399,
       restX:        0.8,   restY: -5.0,
       enterX:       0.8,   enterY: -16.0,
       modelScale:   1.0,

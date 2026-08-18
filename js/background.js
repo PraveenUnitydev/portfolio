@@ -1,14 +1,8 @@
 /* ════════════════════════════════════════════════════════
-   background.js — Full-screen Three.js Particle Scene
-
-   Creates the animated background visible behind all
-   sections: floating particles, wireframe shapes,
-   orbital rings, a grid, and a torus knot.
-
-   Mouse movement creates a parallax camera effect.
-   Scrolling shifts the camera vertically.
+   background.js — Ambient Scene  v3
+   Clean, atmospheric — soft particles + glowing orbs
+   + subtle grid. Not cluttered.
 ════════════════════════════════════════════════════════ */
-
 (function () {
   'use strict';
 
@@ -19,180 +13,139 @@
   renderer.setClearColor(0x000000, 0);
 
   const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 1000);
-  camera.position.z = 30;
+  const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.1, 500);
+  camera.position.z = 28;
 
-  // ── 1. PARTICLE FIELD ──────────────────────────────────
-  const PARTICLE_COUNT = 3200;
-  const pGeo = new THREE.BufferGeometry();
-  const pPos = new Float32Array(PARTICLE_COUNT * 3);
-  const pCol = new Float32Array(PARTICLE_COUNT * 3);
+  /* ── 1. SOFT PARTICLES — fewer, dimmer ────────────── */
+  const N   = window.innerWidth < 768 ? 1200 : 2500;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(N * 3);
+  const col = new Float32Array(N * 3);
 
-  for (let i = 0; i < PARTICLE_COUNT; i++) {
-    pPos[i * 3]     = (Math.random() - 0.5) * 130;
-    pPos[i * 3 + 1] = (Math.random() - 0.5) * 130;
-    pPos[i * 3 + 2] = (Math.random() - 0.5) * 80;
+  for (let i = 0; i < N; i++) {
+    pos[i*3]   = (Math.random() - 0.5) * 120;
+    pos[i*3+1] = (Math.random() - 0.5) * 120;
+    pos[i*3+2] = (Math.random() - 0.5) * 60 - 10;
 
-    // Distribute colours: cyan / magenta / green
+    // Mostly blue-white, occasional cyan accent
     const r = Math.random();
-    if      (r < 0.33) { pCol[i*3]=0;    pCol[i*3+1]=0.96; pCol[i*3+2]=1;    } // cyan
-    else if (r < 0.66) { pCol[i*3]=1;    pCol[i*3+1]=0;    pCol[i*3+2]=0.67; } // magenta
-    else               { pCol[i*3]=0.22; pCol[i*3+1]=1;    pCol[i*3+2]=0.08; } // green
+    if (r < 0.15) {
+      // Cyan
+      col[i*3] = 0.22; col[i*3+1] = 0.74; col[i*3+2] = 0.98;
+    } else if (r < 0.25) {
+      // Indigo
+      col[i*3] = 0.51; col[i*3+1] = 0.55; col[i*3+2] = 0.98;
+    } else {
+      // Soft blue-white
+      col[i*3] = 0.55; col[i*3+1] = 0.67; col[i*3+2] = 0.85;
+    }
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+
+  scene.add(new THREE.Points(geo, new THREE.PointsMaterial({
+    size: 0.12, vertexColors: true,
+    transparent: true, opacity: 0.45,
+    sizeAttenuation: true,
+  })));
+
+  /* ── 2. LARGE GLOWING ORBS (ambient light sources) ── */
+  function makeOrb(color, x, y, z, size) {
+    const orb = new THREE.Mesh(
+      new THREE.SphereGeometry(size, 16, 16),
+      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.03 })
+    );
+    orb.position.set(x, y, z);
+    scene.add(orb);
+
+    // Outer glow ring
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(size * 1.2, size * 2.5, 64),
+      new THREE.MeshBasicMaterial({
+        color, transparent: true, opacity: 0.02, side: THREE.DoubleSide,
+      })
+    );
+    ring.position.set(x, y, z);
+    scene.add(ring);
+    return { orb, ring };
   }
 
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  pGeo.setAttribute('color',    new THREE.BufferAttribute(pCol, 3));
+  const orbs = [
+    makeOrb(0x38bdf8, 14, 2, -12, 6),    // cyan right
+    makeOrb(0x818cf8, -12, -3, -15, 5),  // indigo left
+    makeOrb(0xf472b6, 2, -10, -20, 4),   // rose bottom
+  ];
 
-  const particles = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    size: 0.16,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.65,
-    sizeAttenuation: true,
-  }));
-  scene.add(particles);
-
-  // ── 2. GRID PLANE ──────────────────────────────────────
-  const grid = new THREE.GridHelper(200, 70, 0x00f5ff, 0x00f5ff);
-  grid.material.opacity = 0.04;
+  /* ── 3. SUBTLE GRID PLANE ────────────────────────── */
+  const grid = new THREE.GridHelper(200, 60, 0x1e3a5a, 0x1e3a5a);
   grid.material.transparent = true;
-  grid.position.y = -15;
+  grid.material.opacity = 0.10;
+  grid.position.y = -12;
   scene.add(grid);
 
-  // ── 3. DRIFTING ICOSAHEDRA ─────────────────────────────
-  const icoMat = new THREE.MeshBasicMaterial({
-    color: 0x00f5ff, wireframe: true, transparent: true, opacity: 0.06,
+  /* ── 4. DISTANT WIREFRAME SHAPES (very subtle) ───── */
+  const shapeMat = new THREE.MeshBasicMaterial({
+    color: 0x2a4a6a, wireframe: true, transparent: true, opacity: 0.06,
   });
-  const icosahedra = [];
+  const shapes = [];
 
-  for (let i = 0; i < 6; i++) {
-    const size = Math.random() * 2.2 + 0.5;
-    const mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(size, 1), icoMat.clone());
-    mesh.position.set(
-      (Math.random() - 0.5) * 70,
-      (Math.random() - 0.5) * 50,
-      (Math.random() - 0.5) * 20 - 18   // pushed much further back
-    );
-    mesh.userData = {
-      vx: (Math.random() - 0.5) * 0.003,
-      vy: (Math.random() - 0.5) * 0.003,
-      vz: (Math.random() - 0.5) * 0.002,
-      rx: Math.random() * 0.006,
-      ry: Math.random() * 0.005,
-    };
-    scene.add(mesh);
-    icosahedra.push(mesh);
+  function addShape(geo, x, y, z) {
+    const m = new THREE.Mesh(geo, shapeMat.clone());
+    m.position.set(x, y, z);
+    m.userData.rx = (Math.random() - 0.5) * 0.004;
+    m.userData.ry = (Math.random() - 0.5) * 0.004;
+    scene.add(m); shapes.push(m);
   }
 
-  // ── 4. HERO TORUS KNOT ─────────────────────────────────
-  const torusKnot = new THREE.Mesh(
-    new THREE.TorusKnotGeometry(5, 1.3, 200, 20, 3, 5),
-    new THREE.MeshBasicMaterial({ color: 0x00f5ff, wireframe: true, transparent: true, opacity: 0.1 })
-  );
-  torusKnot.position.set(15, -2, -20);
-  scene.add(torusKnot);
-
-  // ── 5. ORBITAL RINGS ───────────────────────────────────
-  const ringGroup = new THREE.Group();
-  for (let i = 0; i < 3; i++) {
-    const ring = new THREE.Mesh(
-      new THREE.TorusGeometry(8 + i * 3, 0.03, 4, 80),
-      new THREE.MeshBasicMaterial({ color: 0xff00aa, wireframe: true, transparent: true, opacity: 0.09 })
-    );
-    ring.rotation.x = Math.PI / 2 + i * 0.4;
-    ring.rotation.z = i * 0.3;
-    ringGroup.add(ring);
+  if (window.innerWidth >= 768) {
+    addShape(new THREE.IcosahedronGeometry(3, 1),  16, 4, -22);
+    addShape(new THREE.OctahedronGeometry(2.5, 1), -14, -4, -24);
+    addShape(new THREE.TorusKnotGeometry(2.5, 0.5, 80, 10, 2, 3), 0, 8, -28);
   }
-  ringGroup.position.set(-16, 0, -22);
-  scene.add(ringGroup);
 
-  // ── 6. OCTAHEDRON CLUSTER ──────────────────────────────
-  const octaGroup = new THREE.Group();
-  for (let i = 0; i < 10; i++) {
-    const s = Math.random() * 0.9 + 0.3;
-    const m = new THREE.Mesh(
-      new THREE.OctahedronGeometry(s, 0),
-      new THREE.MeshBasicMaterial({ color: 0x39ff14, wireframe: true, transparent: true, opacity: 0.06 })
-    );
-    m.position.set(
-      (Math.random() - 0.5) * 12,
-      (Math.random() - 0.5) * 12,
-      (Math.random() - 0.5) * 10
-    );
-    m.userData.r = { x: Math.random() * 0.012, y: Math.random() * 0.01 };
-    octaGroup.add(m);
-  }
-  octaGroup.position.set(-22, 8, -4);
-  scene.add(octaGroup);
-
-  // ── INPUT TRACKING ──────────────────────────────────────
-  let targetMouseX = 0, targetMouseY = 0, scrollY = 0;
-
-  document.addEventListener('mousemove', (e) => {
-    targetMouseX = (e.clientX / innerWidth  - 0.5) * 2;
-    targetMouseY = -(e.clientY / innerHeight - 0.5) * 2;
+  /* ── INPUT ───────────────────────────────────────── */
+  let mx = 0, my = 0, sy = 0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / innerWidth)  * 2 - 1;
+    my = -(e.clientY / innerHeight) * 2 + 1;
   });
-
-  window.addEventListener('scroll', () => { scrollY = window.scrollY; });
-
+  window.addEventListener('scroll', () => { sy = window.scrollY; }, { passive: true });
   window.addEventListener('resize', () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
   });
 
-  // ── ANIMATION LOOP ──────────────────────────────────────
-  let time = 0;
+  /* ── ANIMATE ─────────────────────────────────────── */
+  let t = 0;
+  (function loop() {
+    requestAnimationFrame(loop);
+    t += 0.006;
 
-  function animate() {
-    requestAnimationFrame(animate);
-    time += 0.007;
-
-    // Parallax camera — lerp toward mouse/scroll target
-    camera.position.x += (targetMouseX * 4  - camera.position.x) * 0.04;
-    camera.position.y += (targetMouseY * 3  - scrollY * 0.0015 - camera.position.y) * 0.03;
+    // Camera gentle parallax
+    camera.position.x += (mx * 2.5 - camera.position.x) * 0.03;
+    camera.position.y += (my * 1.5 - sy * 0.001 - camera.position.y) * 0.03;
     camera.lookAt(0, 0, 0);
 
-    // Torus knot spin
-    torusKnot.rotation.x += 0.003;
-    torusKnot.rotation.y += 0.005;
-
-    // Ring group orbit
-    ringGroup.rotation.y += 0.004;
-    ringGroup.rotation.x += 0.002;
-
-    // Icosahedra drift
-    icosahedra.forEach((m) => {
-      m.rotation.x += m.userData.rx;
-      m.rotation.y += m.userData.ry;
-      m.position.x += m.userData.vx;
-      m.position.y += m.userData.vy;
-      m.position.z += m.userData.vz;
-      if (Math.abs(m.position.x) > 38) m.userData.vx *= -1;
-      if (Math.abs(m.position.y) > 28) m.userData.vy *= -1;
-      if (Math.abs(m.position.z) > 22) m.userData.vz *= -1;
+    // Orbs pulse
+    orbs.forEach((o, i) => {
+      o.orb.material.opacity = 0.02 + 0.015 * Math.sin(t * 0.7 + i * 2.1);
+      o.ring.rotation.z += 0.002;
     });
 
-    // Octahedra rotate
-    octaGroup.children.forEach((c) => {
-      c.rotation.x += c.userData.r.x;
-      c.rotation.y += c.userData.r.y;
-    });
-    octaGroup.rotation.y += 0.003;
+    // Distant shapes rotate slowly
+    shapes.forEach(s => { s.rotation.x += s.userData.rx; s.rotation.y += s.userData.ry; });
 
-    // Particle vertical drift (slow sine wave)
-    const pa = pGeo.attributes.position.array;
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      pa[i * 3 + 1] += Math.sin(time + i * 0.05) * 0.003;
+    // Particle drift
+    const pa = geo.attributes.position.array;
+    for (let i = 0; i < N; i++) {
+      pa[i*3+1] += Math.sin(t + i * 0.08) * 0.002;
     }
-    pGeo.attributes.position.needsUpdate = true;
+    geo.attributes.position.needsUpdate = true;
 
-    // Grid opacity pulse
-    grid.material.opacity = 0.03 + 0.012 * Math.sin(time * 0.5);
+    // Grid breathe
+    grid.material.opacity = 0.07 + 0.03 * Math.sin(t * 0.4);
 
     renderer.render(scene, camera);
-  }
-
-  animate();
-
-})();
+  }());
+}());
