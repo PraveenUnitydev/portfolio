@@ -34,7 +34,7 @@
      path that slowly evolves. Additive blending makes
      ribbon crossings glow naturally.
   ════════════════════════════════════════════════════ */
-  const SEGS = isMobile ? 80 : 160;  // segments per ribbon
+  const SEGS = isMobile ? 70 : 160;  // segments per ribbon
 
   /* Ribbon configuration: path params + visual style */
   const RIBBON_CFGS = [
@@ -146,13 +146,13 @@
   }
 
   /* Create all ribbons (skip last 2 on mobile for performance) */
-  const ribbonCount = isMobile ? 4 : RIBBON_CFGS.length;
+  const ribbonCount = isMobile ? 5 : RIBBON_CFGS.length;
   const ribbons = RIBBON_CFGS.slice(0, ribbonCount).map(() => createRibbon());
 
   /* ════════════════════════════════════════════════════
      2. PARTICLE ATMOSPHERE (soft depth)
   ════════════════════════════════════════════════════ */
-  const PN   = isMobile ? 2500 : 5000;
+  const PN   = isMobile ? 1800 : 5000;
   const pGeo = new THREE.BufferGeometry();
   const pPos = new Float32Array(PN * 3);
   const pCol = new Float32Array(PN * 3);
