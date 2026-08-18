@@ -386,3 +386,16 @@
   }());
 
 }());
+
+/* ── MOBILE: hide props canvas on small screens ── */
+(function () {
+  function checkMobile() {
+    const c = document.getElementById('props-canvas');
+    if (!c) return;
+    // On narrow screens props overlap content — hide them
+    c.style.opacity = window.innerWidth < 768 ? '0' : '1';
+    c.style.transition = 'opacity 0.5s';
+  }
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+}());
