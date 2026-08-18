@@ -79,38 +79,51 @@ body {
 nav {
   position:fixed; top:0; left:0; right:0; z-index:100;
   display:flex; justify-content:space-between; align-items:center;
-  padding:14px var(--px);
-  background:rgba(2,4,8,.96);
-  border-bottom:1px solid rgba(0,245,255,.06);
+  padding:0 var(--px);
+  height:60px;
+  background:rgba(2,4,8,.98);
+  border-bottom:1px solid rgba(0,245,255,.08);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
 }
+
+/* LOGO — big and bold on mobile */
 .logo {
-  font-family:'Orbitron',sans-serif; font-weight:900; font-size:.95rem;
-  color:var(--cyan); letter-spacing:.25em;
-  text-shadow:0 0 18px var(--cyan);
+  font-family:'Orbitron',sans-serif; font-weight:900;
+  font-size:1.3rem;                /* bigger than before */
+  color:var(--cyan); letter-spacing:.2em;
+  text-shadow:0 0 20px rgba(0,245,255,.6);
+  flex-shrink:0;
 }
 .logo em { color:var(--magenta); font-style:normal; }
-/* Desktop nav links hidden on mobile */
-nav ul { display:none; }
-.nav-badge {
-  font-family:'Share Tech Mono',monospace; font-size:.6rem;
-  color:var(--green); letter-spacing:.1em;
+
+/* Desktop nav links — ALWAYS hidden unless overridden at 768px+ */
+nav ul {
+  display:none !important;        /* !important ensures no override */
 }
+
+/* Nav badge — hidden on mobile */
+.nav-badge { display:none; }
 .nav-badge::before { content:'● '; }
 
-/* Hamburger */
+/* HAMBURGER — large, prominent, easy to tap */
 .hamburger {
-  display:flex; flex-direction:column; gap:5px;
-  background:none; border:none; cursor:pointer; padding:6px;
+  display:flex !important;        /* always show on mobile */
+  flex-direction:column; gap:6px;
+  background:none; border:none; cursor:pointer;
+  padding:10px 8px;               /* big tap target */
   z-index:200;
+  -webkit-tap-highlight-color:transparent;
 }
 .hamburger span {
-  display:block; width:22px; height:1.5px;
-  background:var(--cyan); box-shadow:0 0 5px var(--cyan);
-  transition:transform .28s, opacity .28s;
+  display:block; width:26px; height:2px;   /* thicker lines */
+  background:var(--cyan); border-radius:2px;
+  box-shadow:0 0 8px rgba(0,245,255,.6);
+  transition:transform .28s ease, opacity .28s ease;
 }
-.hamburger.open span:nth-child(1) { transform:translateY(6.5px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity:0; }
-.hamburger.open span:nth-child(3) { transform:translateY(-6.5px) rotate(-45deg); }
+.hamburger.open span:nth-child(1) { transform:translateY(8px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.hamburger.open span:nth-child(3) { transform:translateY(-8px) rotate(-45deg); }
 
 /* Mobile nav drawer */
 .mobile-nav {
@@ -197,10 +210,10 @@ section { position:relative; z-index:10; padding:72px 0; }
    HERO — Mobile first
 ═══════════════════════════════════════════════════ */
 #hero {
-  min-height:100svh; /* svh = safe viewport height (accounts for mobile browser bar) */
+  min-height:100svh;
   display:flex; flex-direction:column;
-  justify-content:flex-end; /* push content to bottom third */
-  padding:0 var(--px) 48px;
+  justify-content:center;           /* vertically centred */
+  padding:80px var(--px) 60px;     /* 80px top clears the nav */
   position:relative; z-index:10;
 }
 
@@ -720,17 +733,18 @@ footer {
 @media (min-width: 768px) {
   :root { --px: 32px; }
 
-  /* Nav — show links, hide hamburger */
+  /* Nav — show links, hide hamburger on desktop */
   nav ul {
-    display:flex; gap:28px; list-style:none;
+    display:flex !important; gap:24px; list-style:none;
   }
   nav ul a {
-    font-family:'Share Tech Mono',monospace; font-size:.72rem;
-    color:rgba(200,230,240,.5); text-decoration:none; letter-spacing:.15em;
+    font-family:'Share Tech Mono',monospace; font-size:.7rem;
+    color:rgba(200,230,240,.5); text-decoration:none; letter-spacing:.14em;
     transition:color .2s,text-shadow .2s;
   }
   nav ul a:hover { color:var(--cyan); text-shadow:0 0 10px var(--cyan); }
-  .hamburger { display:none; }
+  .hamburger { display:none !important; }
+  .nav-badge { display:block; font-size:.62rem; }
   .wf-scroll-hint { display:none; }
 
   /* Hero — centred on desktop */

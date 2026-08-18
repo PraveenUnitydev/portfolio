@@ -387,15 +387,18 @@
 
 }());
 
-/* ── MOBILE: hide props canvas on small screens ── */
+/* ── MOBILE: completely remove props canvas on small screens ── */
 (function () {
   function checkMobile() {
     const c = document.getElementById('props-canvas');
     if (!c) return;
-    // On narrow screens props overlap content — hide them
-    c.style.opacity = window.innerWidth < 768 ? '0' : '1';
-    c.style.transition = 'opacity 0.5s';
+    const isMobile = window.innerWidth < 768;
+    // On mobile: hide completely so it never overlaps content
+    c.style.display  = isMobile ? 'none' : 'block';
+    c.style.opacity  = isMobile ? '0'    : '1';
   }
   checkMobile();
   window.addEventListener('resize', checkMobile);
+  // Run immediately AND after fonts/assets load (innerWidth can change)
+  window.addEventListener('load', checkMobile);
 }());
