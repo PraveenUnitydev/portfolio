@@ -669,3 +669,74 @@ footer{
   .socials{grid-template-columns:1fr 1fr;}
   .pmetric-val{font-size:1.7rem;}
 }
+
+/* ══════════════════════════════════════════════════════
+   NUCLEAR MOBILE OVERRIDE — max-width 767px
+   These rules ALWAYS win on phones.
+   Must be the last rules in the file.
+══════════════════════════════════════════════════════ */
+@media only screen and (max-width: 767px) {
+
+  /* NAV — hamburger only, NO links */
+  nav ul { display: none !important; }
+  .hamburger { display: flex !important; }
+  .nav-badge { display: none !important; }
+  nav { height: 64px !important; background: rgba(6,11,24,.98) !important; }
+  .logo { font-size: 1.5rem !important; }
+
+  /* HERO — bottom-anchored, left-aligned */
+  #hero {
+    justify-content: flex-end !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    padding: 0 22px 60px !important;
+  }
+  .hero-name {
+    font-size: clamp(3.6rem, 15.5vw, 5.5rem) !important;
+    line-height: .9 !important;
+  }
+  .hero-name .c1, .hero-name .c2 { display: block !important; }
+  .hero-cta { flex-direction: column !important; }
+  .hero-cta .btn { width: 100% !important; min-width: unset !important; }
+  .hero-scroll { display: none !important; }
+  .inline-tags { flex-wrap: nowrap !important; overflow-x: auto !important; justify-content: flex-start !important; }
+
+  /* SECTIONS — solid background so text is always readable */
+  section { background: rgba(6,11,24,.90) !important; max-width: 100% !important; padding: 60px 0 !important; }
+  #contact { background: rgba(6,11,24,.95) !important; }
+  footer { background: rgba(6,11,24,.97) !important; flex-direction: column !important; text-align: center !important; }
+  #statrow { background: rgba(6,11,24,.95) !important; }
+
+  /* SECTION TITLES — big */
+  .sec-title { font-size: 2.4rem !important; }
+
+  /* STATS — 2 col */
+  .stat-inner { grid-template-columns: 1fr 1fr !important; }
+  .stat-val { font-size: 2.2rem !important; }
+
+  /* PROJECTS — single column */
+  .proj-featured { display: flex !important; flex-direction: column !important; gap: 16px !important; }
+  .proj-grid { display: flex !important; flex-direction: column !important; gap: 16px !important; }
+  .pcard-img { aspect-ratio: 16/9 !important; height: auto !important; }
+  .ptitle { font-size: 1.3rem !important; }
+  .pdesc { font-size: .95rem !important; }
+  .pmetric-val { font-size: 2rem !important; }
+
+  /* SKILLS — single column */
+  .skills-wrap { display: flex !important; flex-direction: column !important; }
+  .sk-name { font-size: 1rem !important; }
+
+  /* XP */
+  .xp-wrap { display: flex !important; flex-direction: column !important; }
+  .ach-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* CONTACT — 3 col socials */
+  .socials { display: grid !important; grid-template-columns: repeat(3,1fr) !important; }
+  .sbtn { font-size: .7rem !important; }
+
+  /* CURSOR — hidden on touch */
+  #cur, #cur-dot { display: none !important; }
+
+  /* Desktop-only elements hidden */
+  .hud { display: none !important; }
+}
