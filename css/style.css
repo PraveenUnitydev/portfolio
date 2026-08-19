@@ -7,14 +7,14 @@ body.is-mobile .hamburger { display: flex !important; }
 body.is-mobile .nav-badge { display: none !important; }
 body.is-mobile .logo { font-size: 1.5rem !important; }
 body.is-mobile nav { height: 64px !important; }
-body.is-mobile #hero { justify-content: flex-end !important; align-items: flex-start !important; text-align: left !important; padding: 0 22px 60px !important; }
+body.is-mobile #hero { justify-content: flex-end !important; align-items: stretch !important; text-align: left !important; padding: 0 22px 60px !important; }
 body.is-mobile .hero-name { font-size: clamp(3.6rem,15.5vw,5.5rem) !important; line-height: .88 !important; }
 body.is-mobile .hero-name .c1, body.is-mobile .hero-name .c2 { display: block !important; }
-body.is-mobile .hero-cta { flex-direction: column !important; }
+body.is-mobile .hero-cta { flex-direction: column !important; width: 100% !important; align-self: stretch !important; }
 body.is-mobile .hero-cta .btn { width: 100% !important; }
 body.is-mobile .hero-scroll { display: none !important; }
 body.is-mobile .hero-role { font-size: 1.05rem !important; color: #b4cce4 !important; line-height: 1.55 !important; margin-bottom: 18px !important; }
-body.is-mobile .hero-tag { font-size: .72rem !important; letter-spacing: .2em !important; }
+body.is-mobile .hero-tag { font-size: .6rem !important; letter-spacing: .12em !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
 body.is-mobile .itag { font-size: .68rem !important; padding: 7px 14px !important; }
 body.is-mobile .hero-name .c1, body.is-mobile .hero-name .c2 { display: block !important; margin: 0 !important; }
 body.is-mobile .inline-tags { flex-wrap: nowrap !important; overflow-x: auto !important; justify-content: flex-start !important; }
@@ -67,6 +67,7 @@ body{
   font-size:16px;
   line-height:1.65;
   overflow-x:hidden;
+  max-width:100vw;
   cursor:auto;
   -webkit-overflow-scrolling:touch;
 }
@@ -178,12 +179,15 @@ nav ul{display:none !important;list-style:none;}
   display:flex;flex-direction:column;
   justify-content:flex-end;
   padding:0 var(--px) 60px;
+  overflow:hidden;
+  width:100%;
 }
 
 .hero-tag{
   font-family:'Share Tech Mono',monospace;
-  font-size:.72rem;color:var(--cyan);
-  letter-spacing:.22em;margin-bottom:14px;opacity:.9;
+  font-size:.62rem;color:var(--cyan);
+  letter-spacing:.14em;margin-bottom:14px;opacity:.9;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
 /* HERO NAME — fills the screen */
@@ -216,6 +220,7 @@ nav ul{display:none !important;list-style:none;}
   display:flex;gap:8px;
   overflow-x:auto;-webkit-overflow-scrolling:touch;
   scrollbar-width:none;padding-bottom:4px;margin-bottom:24px;
+  max-width:100%;
 }
 .inline-tags::-webkit-scrollbar{display:none;}
 .itag{
