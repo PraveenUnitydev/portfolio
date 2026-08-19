@@ -75,11 +75,11 @@
   function createRibbon() {
     const geo  = buildRibbonGeo();
     const core = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-      vertexColors: true, transparent: true, opacity: isMobile ? 0.18 : 0.35,
+      vertexColors: true, transparent: true, opacity: isMobile ? 0.28 : 0.35,
       blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
     }));
     const glow = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
-      vertexColors: true, transparent: true, opacity: isMobile ? 0.04 : 0.08,
+      vertexColors: true, transparent: true, opacity: isMobile ? 0.07 : 0.08,
       blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
     }));
     scene.add(core);
