@@ -1,3 +1,21 @@
+/* ── MOBILE DETECTION — runs before anything else ── */
+(function () {
+  function checkMobile() {
+    var w = window.innerWidth || document.documentElement.clientWidth;
+    if (w < 1024) {
+      document.body.classList.add('is-mobile');
+    } else {
+      document.body.classList.remove('is-mobile');
+    }
+  }
+  // Run immediately
+  checkMobile();
+  // Re-run on resize
+  window.addEventListener('resize', checkMobile);
+  // Also run after fonts load (can affect layout)
+  document.addEventListener('DOMContentLoaded', checkMobile);
+}());
+
 /* ════════════════════════════════════════════════════════
    ui.js — Interface & Interaction  v4 (mobile-first)
 ════════════════════════════════════════════════════════ */
