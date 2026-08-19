@@ -782,3 +782,70 @@ footer{
   /* Desktop-only elements hidden */
   .hud { display: none !important; }
 }
+
+/* ── MOBILE 3D SCROLL REVEALS ─────────────────────── */
+@media only screen and (max-width: 1023px) {
+
+  /* Perspective container for section cards */
+  #projects, #workflow, #xpsec, #exp {
+    perspective: 1200px;
+  }
+
+  /* Cards start hidden and rotated, JS adds .revealed */
+  .pcard.m-reveal,
+  .tli.m-reveal,
+  .ach.m-reveal,
+  .sk-item.m-reveal,
+  .wf-case.m-reveal,
+  .xp-left.m-reveal {
+    opacity: 0;
+    transform: translateY(50px) rotateX(14deg);
+    transform-origin: top center;
+    transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+  }
+
+  .pcard.m-reveal.m-in,
+  .tli.m-reveal.m-in,
+  .ach.m-reveal.m-in,
+  .sk-item.m-reveal.m-in,
+  .wf-case.m-reveal.m-in,
+  .xp-left.m-reveal.m-in {
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
+  }
+
+  /* Stagger siblings */
+  .pcard.m-reveal:nth-child(2) { transition-delay: 0.08s; }
+  .pcard.m-reveal:nth-child(3) { transition-delay: 0.16s; }
+  .ach.m-reveal:nth-child(2)   { transition-delay: 0.07s; }
+  .ach.m-reveal:nth-child(3)   { transition-delay: 0.14s; }
+  .ach.m-reveal:nth-child(4)   { transition-delay: 0.21s; }
+  .ach.m-reveal:nth-child(5)   { transition-delay: 0.28s; }
+  .ach.m-reveal:nth-child(6)   { transition-delay: 0.35s; }
+  .sk-item.m-reveal:nth-child(2) { transition-delay: 0.06s; }
+  .sk-item.m-reveal:nth-child(3) { transition-delay: 0.12s; }
+  .sk-item.m-reveal:nth-child(4) { transition-delay: 0.18s; }
+
+  /* Gyroscope parallax layers */
+  .gyro-layer-1 { transition: transform 0.25s ease-out; will-change: transform; }
+  .gyro-layer-2 { transition: transform 0.35s ease-out; will-change: transform; }
+  .gyro-layer-3 { transition: transform 0.45s ease-out; will-change: transform; }
+
+  /* Section heading reveal */
+  .sec-head .sec-title {
+    overflow: hidden;
+  }
+  .sec-head .eyebrow.m-reveal,
+  .sec-head .sec-title.m-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .sec-head .eyebrow.m-reveal.m-in,
+  .sec-head .sec-title.m-reveal.m-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .sec-head .sec-title.m-reveal { transition-delay: 0.12s; }
+}
