@@ -931,33 +931,43 @@ footer{
 .sk-featured[data-pct="80"] .sk-pct,
 .sk-featured[data-pct="82"] .sk-pct { color: var(--rose) !important; }
 
-/* Tag chip that appears next to featured skills */
+/* Tag chip next to featured skill name */
 .sk-featured .sk-name::after {
-  content: 'CORE';
+  content: 'XR';
   margin-left: 10px;
   font-family: 'Share Tech Mono', monospace;
   font-size: .52rem;
   color: var(--cyan);
-  background: rgba(56,189,248,0.12);
-  border: 1px solid rgba(56,189,248,0.25);
+  background: rgba(56,189,248,0.10);
+  border: 1px solid rgba(56,189,248,0.22);
   border-radius: 3px;
   padding: 2px 7px;
   letter-spacing: .06em;
   vertical-align: middle;
 }
-/* AI skills get AI tag */
-.sk-featured[data-pct="80"] .sk-name::after,
-.sk-featured[data-pct="82"] .sk-name::after {
-  content: 'AI';
+/* AI/ML skills */
+.sk-featured.sk-ai .sk-name::after {
+  content: 'AI · ML';
   color: var(--rose);
   background: rgba(244,114,182,0.10);
   border-color: rgba(244,114,182,0.25);
 }
-/* XR skill */
-.sk-featured[data-pct="92"] .sk-name::after,
-.sk-featured[data-pct="88"] .sk-name::after {
-  content: 'XR';
-  color: var(--indigo);
-  background: rgba(129,140,248,0.10);
-  border-color: rgba(129,140,248,0.25);
+/* Simulation skill (data-pct=85) */
+.sk-featured[data-pct="85"] .sk-name::after {
+  content: 'SIM';
+  color: var(--amber);
+  background: rgba(251,191,36,0.10);
+  border-color: rgba(251,191,36,0.25);
 }
+/* AI bar colours — override for sk-ai class */
+.sk-featured.sk-ai .sk-fill {
+  background: linear-gradient(90deg, var(--rose), var(--amber)) !important;
+  box-shadow: 0 0 14px rgba(244,114,182,0.45) !important;
+}
+.sk-featured.sk-ai .sk-pct { color: var(--rose) !important; }
+/* Simulation bar */
+.sk-featured[data-pct="85"] .sk-fill {
+  background: linear-gradient(90deg, var(--amber), var(--cyan)) !important;
+  box-shadow: 0 0 14px rgba(251,191,36,0.35) !important;
+}
+.sk-featured[data-pct="85"] .sk-pct { color: var(--amber) !important; }
