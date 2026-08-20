@@ -662,10 +662,9 @@ footer{
   .sline{animation:spulse 2s infinite;}
 
   /* Stats 4-col */
-  .stat-inner{grid-template-columns:repeat(4,1fr);}
-  .stat-box:nth-child(2n){border-right:1px solid rgba(255,255,255,.07);}
-  .stat-box:last-child{border-right:none;}
-  .stat-box:nth-child(3),.stat-box:nth-child(4){border-bottom:none;}
+  .stat-inner{grid-template-columns:repeat(3,1fr);}  /* 3 stats now */
+  .stat-box:nth-child(3){border-right:none;}
+  .stat-box:nth-child(n){border-bottom:none;}
 
   /* Section max width */
   section{max-width:960px;margin-left:auto;margin-right:auto;}
@@ -885,4 +884,80 @@ footer{
     position: relative;
     z-index: 12;
   }
+}
+
+/* ── FEATURED SKILLS — XR, AI, Unity, Simulation ────── */
+.sk-featured {
+  position: relative;
+}
+
+/* Accent left border */
+.sk-featured::before {
+  content: '';
+  position: absolute;
+  left: -12px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan), var(--indigo));
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.8s; /* fades in after bar animates */
+}
+.sk-featured.visible::before { opacity: 1; }
+
+/* Featured skill name — brighter, slightly bigger */
+.sk-featured .sk-name {
+  color: var(--t1) !important;
+  font-size: 1rem !important;
+}
+
+/* Featured bar — cyan glow */
+.sk-featured .sk-fill {
+  background: linear-gradient(90deg, var(--cyan), #7dd3fc) !important;
+  box-shadow: 0 0 14px rgba(56,189,248,0.55) !important;
+}
+
+/* Featured label badge */
+.sk-featured .sk-pct {
+  color: var(--cyan) !important;
+  font-size: .85rem !important;
+}
+
+/* AI skill — special amber/rose accent */
+.sk-featured[data-pct="80"] .sk-fill,
+.sk-featured[data-pct="82"] .sk-fill {
+  background: linear-gradient(90deg, var(--rose), var(--amber)) !important;
+  box-shadow: 0 0 14px rgba(244,114,182,0.45) !important;
+}
+.sk-featured[data-pct="80"] .sk-pct,
+.sk-featured[data-pct="82"] .sk-pct { color: var(--rose) !important; }
+
+/* Tag chip that appears next to featured skills */
+.sk-featured .sk-name::after {
+  content: 'CORE';
+  margin-left: 10px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: .52rem;
+  color: var(--cyan);
+  background: rgba(56,189,248,0.12);
+  border: 1px solid rgba(56,189,248,0.25);
+  border-radius: 3px;
+  padding: 2px 7px;
+  letter-spacing: .06em;
+  vertical-align: middle;
+}
+/* AI skills get AI tag */
+.sk-featured[data-pct="80"] .sk-name::after,
+.sk-featured[data-pct="82"] .sk-name::after {
+  content: 'AI';
+  color: var(--rose);
+  background: rgba(244,114,182,0.10);
+  border-color: rgba(244,114,182,0.25);
+}
+/* XR skill */
+.sk-featured[data-pct="92"] .sk-name::after,
+.sk-featured[data-pct="88"] .sk-name::after {
+  content: 'XR';
+  color: var(--indigo);
+  background: rgba(129,140,248,0.10);
+  border-color: rgba(129,140,248,0.25);
 }
